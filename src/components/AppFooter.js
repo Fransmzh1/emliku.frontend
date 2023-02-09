@@ -5,8 +5,8 @@ const AppFooter = () => {
   return (
     <CFooter>
       <div>
-        <a href="https://coreui.io" target="_blank" rel="noopener noreferrer">
-          EMSIKU
+        <a href="http://edujobs.id" target="_blank" rel="noopener noreferrer">
+          EMLIKU
         </a>
       </div>
     </CFooter>

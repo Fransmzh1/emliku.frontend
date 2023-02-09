@@ -3,8 +3,6 @@ import axios from 'axios'
 
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
 import logo from 'src/assets/brand/lpk_emliku.png'
 import {
   CAlert,
@@ -18,15 +16,11 @@ import {
   CContainer,
   CForm,
   CFormInput,
-  CInputGroup,
-  CInputGroupText,
   CRow,
 } from '@coreui/react'
 import config from 'src/config.js'
 
 const USER_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
-const REGISTER_URL = config.BACKEND_URL + '/registeruser'
 
 const Register = () => {
   const userRef = useRef()
@@ -45,10 +39,8 @@ const Register = () => {
   const [matchFocus, setMatchFocus] = useState(false)
 
   const [errMsg, setErrMsg] = useState('')
-  const [success, setSuccess] = useState(false)
 
   const [emailaddr, setEmailaddr] = useState()
-  const [passwd, setPasswd] = useState()
   const [confirmMsg, setConfirmMsg] = useState()
   const [showAlert, setShowAlert] = useState(false)
   const navigate = useNavigate()
@@ -145,7 +137,7 @@ const Register = () => {
                       onChange={(e) => setUser(e.target.value)}
                     />
                     <CFormInput
-                      type="text"
+                      type="password"
                       id="password"
                       placeholder="Password"
                       autoComplete="off"
@@ -161,7 +153,7 @@ const Register = () => {
                       onChange={(e) => setPwd(e.target.value)}
                     />
                     <CFormInput
-                      type="text"
+                      type="password"
                       id="confirm_pwd"
                       placeholder="Confirm Password"
                       autoComplete="off"

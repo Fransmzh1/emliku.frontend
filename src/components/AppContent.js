@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useRef } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
 
@@ -12,8 +12,6 @@ const Syarat = React.lazy(() => import('../views/dashboard/Syarat'))
 const RegistrationList = React.lazy(() => import('../views/dashboard/RegistrationList'))
 
 const AppContent = () => {
-  const [email, setEmail] = useState('')
-
   return (
     <CContainer lg>
       <Suspense fallback={<CSpinner color="primary" />}>
@@ -22,26 +20,16 @@ const AppContent = () => {
           <Route path="/compro" name="Compro" element={<Compro />} />
           <Route path="/program" exact name="Program" element={<Program />} />
           <Route path="/term" exact name="Program" element={<Syarat />} />
-          <Route
-            path="/registration2"
-            exact
-            name="Registration2"
-            element={<Registration2 email={email} />}
-          />
+          <Route path="/registration2" exact name="Registration2" element={<Registration2 />} />
           <Route element={<ProtectedRoute />}>
+            <Route path="/registration" exact name="Registration" element={<Registration />} />
             <Route
-              path="/registration"
+              path="/registrationlist"
               exact
-              name="Registration"
-              element={<Registration email={email} />}
+              name="RegistrationList"
+              element={<RegistrationList />}
             />
           </Route>
-          <Route
-            path="/registrationlist"
-            exact
-            name="RegistrationList"
-            element={<RegistrationList />}
-          />
         </Routes>
       </Suspense>
     </CContainer>

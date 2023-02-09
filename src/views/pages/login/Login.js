@@ -63,7 +63,7 @@ const Login = () => {
     try {
       const response = await backendClient({
         method: 'post',
-        url: '/userverify',
+        url: '/login',
         data: { email: emailaddr, password: passwd },
         headers: { 'Content-Type': 'application/json' },
       })
@@ -72,14 +72,16 @@ const Login = () => {
       let expires_at = new Date().getTime() + 1800000
       let _loginfo = {
         email: emailaddr,
-        basic: response.data,
+        basic: response.data.accessToken,
         eat: expires_at,
+        regstatus: response.data.regStatus,
       }
       sessionStorage.setItem('loginfo', JSON.stringify(_loginfo))
       setConfirmMsg('Aktivasi user silakan check di email ' + emailaddr)
       setSignup(false)
       navigate(forwardTo, { replace: true })
     } catch (error) {
+      console.log(error)
       setConfirmMsg(error.message)
       setShowAlert(true)
     }

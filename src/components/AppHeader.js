@@ -1,18 +1,10 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import {
-  CContainer,
-  CHeader,
-  CHeaderDivider,
-  CHeaderNav,
-  CNavLink,
-  CNavItem,
-  CImage,
-} from '@coreui/react'
+import { CContainer, CHeader, CHeaderNav, CNavLink, CNavItem, CImage } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilList } from '@coreui/icons'
 
-import { AppHeaderDropdown } from './header/index'
+// import { AppHeaderDropdown } from './header/index'
 import lpk from 'src/assets/brand/lpk_emliku.png'
 
 const AppHeader = () => {
