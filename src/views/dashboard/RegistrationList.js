@@ -62,11 +62,11 @@ const RegistrationList = () => {
           headers: { Authorization: 'Basic ' + _loginfo.basic },
         })
         setRows(response.data)
+        setLoading(false)
       } catch (error) {
         console.log(error.message)
       }
     }
-    setLoading(false)
     loadData()
   }, [])
 

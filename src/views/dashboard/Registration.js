@@ -22,8 +22,6 @@ import {
 } from '@coreui/react'
 import config from 'src/config.js'
 
-// import { fileList } from './filelist.js'
-
 const Registration = () => {
   const [email, setEmail] = useState('')
   const [nama, setNama] = useState()
@@ -31,7 +29,8 @@ const Registration = () => {
   const [rtrw, setRtrw] = useState()
   const [no, setNo] = useState()
   const [propinsi, setPropinsi] = useState()
-  const [kecamatan, setKecamatan] = useState()
+  const [kabupaten, setKabupaten] = useState({})
+  const [kecamatan, setKecamatan] = useState({})
   const [kelurahan, setKelurahan] = useState()
   const [kodearea, setKodearea] = useState()
   const [agama, setAgama] = useState()
@@ -58,9 +57,6 @@ const Registration = () => {
   const [negaratujuan, setNegaratujuan] = useState()
   const [program, setProgram] = useState()
   const [durasiprogram, setDurasiprogram] = useState()
-  const [buktitransferbank, setBuktitransferbank] = useState()
-  const [buktitransfernorek, setBuktitransfernorek] = useState()
-  const [buktitransfernama, setBuktitransfernama] = useState()
 
   const [filePhoto, setFilePhoto] = useState()
   const [fileKtp, setFileKtp] = useState()
@@ -82,22 +78,30 @@ const Registration = () => {
   const [fileSertBooster, setFileSertBooster] = useState()
 
   const [propinsilist, setPropinsilist] = useState([])
+  const [kabupatenlist, setKabupatenlist] = useState([])
+  const [kecamatanlist, setKecamatanlist] = useState([])
+  const [kelurahanlist, setKelurahanlist] = useState([])
   const [newreg, setNewreg] = useState(true)
   const [disclaimer, setDisclaimer] = useState(false)
   const [loading, setLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [alertMsg, setAlertMsg] = useState()
 
-  const backendClient = axios.create({
-    baseURL: config.BACKEND_URL,
-  })
-
   useEffect(() => {
     setLoading(true)
-    backendClient.get('/master/propinsi').then((res) => {
-      setPropinsilist(res.data)
-      setLoading(false)
-    })
+    const loadData = async () => {
+      try {
+        const res = await axios({
+          method: 'get',
+          url: config.BACKEND_URL + '/master/propinsi',
+        })
+        setPropinsilist(res.data)
+        setLoading(false)
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+    loadData()
   }, [])
 
   useEffect(() => {
@@ -109,6 +113,22 @@ const Registration = () => {
       setAlertVisible(true)
     }
   }, [email])
+
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     try {
+  //       const res = await axios({
+  //         method: 'get',
+  //         url: config.BACKEND_URL + '/master/kecamatan?kabupaten=' + kabupaten.id,
+  //       })
+  //       setKabupatenlist(res.data)
+  //       setLoading(false)
+  //     } catch (error) {
+  //       console.log(error.message)
+  //     }
+  //   }
+  //   loadData()
+  // }, [kabupaten])
 
   const handleFileChanges = (e) => {
     console.log('Change file size ' + e.target.files[0].size)
@@ -156,7 +176,60 @@ const Registration = () => {
     }
   }
 
-  const myFormData = (e) => {
+  const handlePropinsiChange = async (e) => {
+    setPropinsi(e.target.value)
+    try {
+      const res = await axios({
+        method: 'get',
+        url: config.BACKEND_URL + '/master/kabupaten?propinsi=' + e.target.value,
+      })
+      console.log('Kabupatens: ' + JSON.stringify(res.data))
+      setKabupatenlist(res.data)
+      setKecamatanlist([])
+      setKelurahanlist([])
+      setLoading(false)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const handleKabupatenChange = async (e) => {
+    const selectedOption = e.target.options[e.target.selectedIndex]
+    const kabupatenId = selectedOption.getAttribute('data-value')
+    console.log(kabupatenId)
+    setKabupaten({ id: kabupatenId, kabupaten: e.target.value })
+    try {
+      const res = await axios({
+        method: 'get',
+        url: config.BACKEND_URL + '/master/kecamatan?kabupaten=' + kabupatenId,
+      })
+      console.log('Kecamatan: ' + JSON.stringify(res.data))
+      setKecamatanlist(res.data)
+      setLoading(false)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const handleKecamatanChange = async (e) => {
+    const selectedOption = e.target.options[e.target.selectedIndex]
+    const kecamatanId = selectedOption.getAttribute('data-value')
+    console.log(kecamatanId)
+    setKecamatan({ id: kecamatanId, kecamatan: e.target.value })
+    try {
+      const res = await axios({
+        method: 'get',
+        url: config.BACKEND_URL + '/master/kelurahan?kecamatan=' + kecamatanId,
+      })
+      console.log('Kelurahans: ' + JSON.stringify(res.data))
+      setKelurahanlist(res.data)
+      setLoading(false)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const myFormData = () => {
     let _filesIncluded = ''
     let _files = []
     if (filePhoto) {
@@ -249,7 +322,8 @@ const Registration = () => {
       rtrw,
       no,
       propinsi,
-      kecamatan,
+      kabupaten: kabupaten.kabupaten,
+      kecamatan: kecamatan.kecamatan,
       kelurahan,
       kodearea,
       agama,
@@ -276,9 +350,6 @@ const Registration = () => {
       negaratujuan,
       program,
       durasiprogram,
-      buktitransferbank,
-      buktitransfernorek,
-      buktitransfernama,
     }
     return data
   }
@@ -293,9 +364,9 @@ const Registration = () => {
       Authorization: 'Basic ' + _loginfo.basic,
     }
     try {
-      const response = await backendClient({
+      const response = axios({
         method: 'post',
-        url: '/registration',
+        url: config.BACKEND_URL + '/registration',
         data: formData,
         headers: fileHeaders,
       })
@@ -488,40 +559,57 @@ const Registration = () => {
                           id="propinsi"
                           value={propinsi}
                           required
-                          onChange={(e) => setPropinsi(e.target.value)}
+                          onChange={handlePropinsiChange}
                         >
                           <option value="">Pilih Propinsi</option>
-                          {propinsilist.map((p) => (
-                            <option key={p} value={p}>
+                          {propinsilist.map((p, key) => (
+                            <option key={key} value={p}>
                               {p}
                             </option>
                           ))}
                         </CFormSelect>
                       </CCol>
-                      {/* <CCol sm={7}>
-                        <CFormInput
+                    </CRow>
+                    <CRow>
+                      <CFormLabel htmlFor="kabupaten" className="col-sm-3 col-form-label">
+                        Kabupaten/Kota:
+                      </CFormLabel>
+                      <CCol sm={7}>
+                        <CFormSelect
                           size="sm"
-                          type="text"
-                          id="propinsi"
-                          value={propinsi}
+                          id="kabupaten"
+                          value={kabupaten.kabupaten}
                           required
-                          onChange={(e) => setPropinsi(e.target.value)}
-                        />
-                      </CCol> */}
+                          onChange={handleKabupatenChange}
+                        >
+                          <option value="">Pilih Kabupaten</option>
+                          {kabupatenlist.map((p) => (
+                            <option key={p.id} data-value={p.id} value={p.kabupaten}>
+                              {p.kabupaten}
+                            </option>
+                          ))}
+                        </CFormSelect>
+                      </CCol>
                     </CRow>
                     <CRow>
                       <CFormLabel htmlFor="kecamatan" className="col-sm-3 col-form-label">
                         Kecamatan:
                       </CFormLabel>
                       <CCol sm={7}>
-                        <CFormInput
+                        <CFormSelect
                           size="sm"
-                          type="text"
                           id="kecamatan"
+                          value={kecamatan.kecamatan}
                           required
-                          value={kecamatan}
-                          onChange={(e) => setKecamatan(e.target.value)}
-                        />
+                          onChange={handleKecamatanChange}
+                        >
+                          <option value="">Pilih Kecamatan</option>
+                          {kecamatanlist.map((p) => (
+                            <option key={p.id} data-value={p.id} value={p.kecamatan}>
+                              {p.kecamatan}
+                            </option>
+                          ))}
+                        </CFormSelect>
                       </CCol>
                     </CRow>
                     <CRow>
@@ -529,14 +617,20 @@ const Registration = () => {
                         Kelurahan:
                       </CFormLabel>
                       <CCol sm={7}>
-                        <CFormInput
+                        <CFormSelect
                           size="sm"
-                          type="text"
                           id="kelurahan"
-                          required
                           value={kelurahan}
+                          required
                           onChange={(e) => setKelurahan(e.target.value)}
-                        />
+                        >
+                          <option value="">Pilih Kelurahan</option>
+                          {kelurahanlist.map((p) => (
+                            <option key={p.id} value={p.kelurahan}>
+                              {p.kelurahan}
+                            </option>
+                          ))}
+                        </CFormSelect>
                       </CCol>
                     </CRow>
                     <CRow>
@@ -804,42 +898,6 @@ const Registration = () => {
               <CCol xs={6}>
                 <CCard className="mb-3">
                   <CCardBody>
-                    <CCardTitle>Institusi</CCardTitle>
-                    <CRow>
-                      <CFormLabel htmlFor="socmed" className="col-sm-3 col-form-label">
-                        Nama Agent:
-                      </CFormLabel>
-                      <CCol sm={7}>
-                        <CFormInput
-                          size="sm"
-                          type="text"
-                          value={referalagent}
-                          id="referalagent"
-                          onChange={(e) => setReferalagent(e.target.value)}
-                        />
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CFormLabel htmlFor="socmed" className="col-sm-3 col-form-label">
-                        Lembaga:
-                      </CFormLabel>
-                      <CCol sm={7}>
-                        <CFormInput
-                          size="sm"
-                          type="text"
-                          id="referalgroupperusahaan"
-                          onChange={(e) => setReferalgroupperusahaan(e.target.value)}
-                        />
-                      </CCol>
-                    </CRow>
-                  </CCardBody>
-                </CCard>
-              </CCol>
-            </CRow>
-            <CRow>
-              <CCol xs={6}>
-                <CCard className="mb-3">
-                  <CCardBody>
                     <CCardTitle>Program</CCardTitle>
                     <CRow>
                       <CFormLabel htmlFor="negaratujuan" className="col-sm-4 col-form-label">
@@ -904,54 +962,36 @@ const Registration = () => {
                   </CCardBody>
                 </CCard>
               </CCol>
+            </CRow>
+            <CRow>
               <CCol xs={6}>
-                <CCard>
+                <CCard className="mb-3">
                   <CCardBody>
-                    <CCardTitle>Info Bank</CCardTitle>
+                    <CCardTitle>Institusi</CCardTitle>
                     <CRow>
-                      <CFormLabel htmlFor="buktitransferbank" className="col-sm-3 col-form-label">
-                        Nama Bank:
+                      <CFormLabel htmlFor="socmed" className="col-sm-3 col-form-label">
+                        Nama Agent:
                       </CFormLabel>
-                      <CCol sm={6}>
-                        <CFormSelect
-                          size="sm"
-                          id="buktitransferbank"
-                          required
-                          value={buktitransferbank}
-                          onChange={(e) => setBuktitransferbank(e.target.value)}
-                        >
-                          <option value="">Pilih Kode Bank</option>
-                          <option value="BCA">BCA</option>
-                        </CFormSelect>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CFormLabel htmlFor="buktitransfernorek" className="col-sm-3 col-form-label">
-                        No Rekening:
-                      </CFormLabel>
-                      <CCol sm={6}>
+                      <CCol sm={7}>
                         <CFormInput
                           size="sm"
                           type="text"
-                          required
-                          value={buktitransfernorek}
-                          id="buktitransfernorek"
-                          onChange={(e) => setBuktitransfernorek(e.target.value)}
+                          value={referalagent}
+                          id="referalagent"
+                          onChange={(e) => setReferalagent(e.target.value)}
                         />
                       </CCol>
                     </CRow>
                     <CRow>
-                      <CFormLabel htmlFor="buktitransfernorek" className="col-sm-3 col-form-label">
-                        Atas nama:
+                      <CFormLabel htmlFor="socmed" className="col-sm-3 col-form-label">
+                        Lembaga:
                       </CFormLabel>
-                      <CCol sm={6}>
+                      <CCol sm={7}>
                         <CFormInput
                           size="sm"
                           type="text"
-                          required
-                          value={buktitransfernama}
-                          id="buktitransfernama"
-                          onChange={(e) => setBuktitransfernama(e.target.value)}
+                          id="referalgroupperusahaan"
+                          onChange={(e) => setReferalgroupperusahaan(e.target.value)}
                         />
                       </CCol>
                     </CRow>
@@ -1221,6 +1261,13 @@ const Registration = () => {
                               onChange={handleFileChanges}
                             />
                           </CCol>
+                        </CRow>
+                        <CRow>
+                          <em>Bank Tujuan: BCA</em>
+                          <br />
+                          <em>No Rekening Tujuan: 8840886060</em>
+                          <br />
+                          <em>Nama Tujuan: PT MULTI BISNIS EMLIKU</em>
                         </CRow>
                       </CCol>
                     </CRow>

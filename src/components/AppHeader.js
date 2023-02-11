@@ -8,6 +8,7 @@ import { cilBell, cilList } from '@coreui/icons'
 import lpk from 'src/assets/brand/lpk_emliku.png'
 
 const AppHeader = () => {
+  const _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -37,12 +38,14 @@ const AppHeader = () => {
               Syarat dan Ketentuan
             </CNavLink>
           </CNavItem>
-          <CNavItem>
-            <CNavLink to="/registrationlist" component={NavLink}>
-              <CIcon icon={cilList} size="lg" />
-              Registration List
-            </CNavLink>
-          </CNavItem>
+          {_loginfo && _loginfo.admin && _loginfo.admin === 'true' && (
+            <CNavItem>
+              <CNavLink to="/registrationlist" component={NavLink}>
+                <CIcon icon={cilList} size="lg" />
+                Registration List
+              </CNavLink>
+            </CNavItem>
+          )}
         </CHeaderNav>
         {/* <CHeaderNav className="ms-3">
           <AppHeaderDropdown />

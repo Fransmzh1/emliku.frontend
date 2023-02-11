@@ -75,6 +75,7 @@ const Login = () => {
         basic: response.data.accessToken,
         eat: expires_at,
         regstatus: response.data.regStatus,
+        admin: response.data.admin,
       }
       sessionStorage.setItem('loginfo', JSON.stringify(_loginfo))
       setConfirmMsg('Aktivasi user silakan check di email ' + emailaddr)
