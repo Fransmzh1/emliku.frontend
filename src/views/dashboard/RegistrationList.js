@@ -32,6 +32,11 @@ const RegistrationList = () => {
       sortable: true,
     },
     {
+      name: 'No KTP',
+      selector: (row) => row.noKtp,
+      sortable: true,
+    },
+    {
       name: 'Propinsi',
       selector: (row) => row.addrPropinsi,
       sortable: true,
@@ -58,7 +63,7 @@ const RegistrationList = () => {
       try {
         const response = await backendClient({
           method: 'get',
-          url: '/registrations',
+          url: '/registration',
           headers: { Authorization: 'Basic ' + _loginfo.basic },
         })
         setRows(response.data)
@@ -79,7 +84,8 @@ const RegistrationList = () => {
         url: '/registration?email=' + emailAddr,
         headers: { Authorization: 'Basic ' + _loginfo.basic },
       })
-      setDetailData(response.data)
+      console.log(JSON.stringify(response.data))
+      setDetailData(response.data[0])
       setShowDetail(true)
       setLoading(false)
     } catch (error) {
@@ -135,12 +141,41 @@ const RegistrationList = () => {
     setLoading(false)
   }
 
+  const handleDownloadDataDetail = async () => {
+    let emails = [detailData.email]
+    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
+    console.log('downloading ' + JSON.stringify(emails))
+    setLoading(true)
+    const formData = emails
+    try {
+      const response = await backendClient({
+        method: 'post',
+        url: '/download/registration',
+        data: formData,
+        headers: { Authorization: 'Basic ' + _loginfo.basic },
+        responseType: 'blob',
+      })
+      const blob = new Blob([response.data], { type: 'application/zip' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.style.display = 'none'
+      a.href = url
+      a.download = 'datapelamar.zip'
+      document.body.appendChild(a)
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.log(error.message)
+    }
+    setLoading(false)
+  }
+
   return (
     <>
       {!showDetail && (
         <CCard className="mb-4">
           <CCardHeader>
-            <h4>Daftar Registration</h4>
+            <h4>Daftar Registrasi</h4>
           </CCardHeader>
           <CCardBody>
             <DataTable
@@ -300,19 +335,16 @@ const RegistrationList = () => {
               <CCol sm={4}>Lama Program Kerja:</CCol>
               <CCol>{detailData.durasiProgram}</CCol>
             </CRow>
-            <CRow>
-              <CCol sm={4}>Bank:</CCol>
-              <CCol>{detailData.buktiTransferBank}</CCol>
-            </CRow>
-            <CRow>
-              <CCol sm={4}>No Rekening - Nama:</CCol>
-              <CCol>
-                {detailData.buktiTransferNorek} - {detailData.buktiTransferNama}
-              </CCol>
-            </CRow>
           </CCardBody>
           <CCardFooter>
-            <CButton onClick={() => setShowDetail(false)}>Back</CButton>
+            <div className="d-grid gap-2 d-md-flex justify-content-md-start">
+              <CButton color="primary" className="me-md-2" onClick={() => setShowDetail(false)}>
+                Back
+              </CButton>
+              <CButton color="primary" onClick={handleDownloadDataDetail}>
+                Download
+              </CButton>
+            </div>
           </CCardFooter>
         </CCard>
       )}

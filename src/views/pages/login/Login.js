@@ -25,7 +25,7 @@ import logo from 'src/assets/brand/lpk_emliku.png'
 import config from 'src/config.js'
 
 const Login = () => {
-  const [signup, setSignup] = useState(false)
+  // const [signup, setSignup] = useState(false)
   // const [formMode, setFormMode] = useState('Login')
   const [emailaddr, setEmailaddr] = useState()
   const [passwd, setPasswd] = useState()
@@ -33,29 +33,29 @@ const Login = () => {
   const [showAlert, setShowAlert] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
-  const forwardTo = location.state?.prev ? location.state.prev : '/compro'
+  const forwardTo = location.state?.prev ? location.state.prev : '/registrationlist'
 
   const backendClient = axios.create({
     baseURL: config.BACKEND_URL,
   })
 
-  const handleSignup = async (e) => {
-    e.preventDefault()
-    console.log('Signup')
-    try {
-      const response = await backendClient({
-        method: 'post',
-        url: '/registeruser',
-        data: { email: emailaddr, password: passwd },
-        headers: { 'Content-Type': 'application/json' },
-      })
-      console.log('Sukses')
-      setConfirmMsg('Aktivasi user silakan check di email ' + emailaddr)
-      setSignup(false)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
+  // const handleSignup = async (e) => {
+  //   e.preventDefault()
+  //   console.log('Signup')
+  //   try {
+  //     const response = await backendClient({
+  //       method: 'post',
+  //       url: '/usermgmt/register',
+  //       data: { email: emailaddr, password: passwd },
+  //       headers: { 'Content-Type': 'application/json' },
+  //     })
+  //     console.log('Sukses')
+  //     setConfirmMsg('Aktivasi user silakan check di email ' + emailaddr)
+  //     setSignup(false)
+  //   } catch (error) {
+  //     console.log(error.message)
+  //   }
+  // }
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -63,12 +63,12 @@ const Login = () => {
     try {
       const response = await backendClient({
         method: 'post',
-        url: '/login',
+        url: '/usermgmt/login',
         data: { email: emailaddr, password: passwd },
         headers: { 'Content-Type': 'application/json' },
       })
-      console.log('Sukses')
-      console.log(JSON.stringify(response.data))
+      console.log('Login Sukses')
+      // console.log(JSON.stringify(response.data))
       let expires_at = new Date().getTime() + 1800000
       let _loginfo = {
         email: emailaddr,
@@ -79,7 +79,7 @@ const Login = () => {
       }
       sessionStorage.setItem('loginfo', JSON.stringify(_loginfo))
       setConfirmMsg('Aktivasi user silakan check di email ' + emailaddr)
-      setSignup(false)
+      // setSignup(false)
       navigate(forwardTo, { replace: true })
     } catch (error) {
       console.log(error)
@@ -89,7 +89,7 @@ const Login = () => {
   }
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+    <div className="bg-light min-vh-80 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCard className="mb-3" style={{ maxWidth: '640px' }}>
@@ -130,22 +130,6 @@ const Login = () => {
                         </CButton>
                       </CCol>
                       {showAlert && <CAlert color="primary">{confirmMsg}</CAlert>}
-                    </CRow>
-                    <CRow>
-                      {/* <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0" onClick={() => navigate('/reset')}>
-                          Lupa Password?
-                        </CButton>
-                      </CCol> */}
-                      <CCol xs={6} className="text-right">
-                        <CButton
-                          color="link"
-                          className="px-0"
-                          onClick={() => navigate('/register')}
-                        >
-                          Sign-up
-                        </CButton>
-                      </CCol>
                     </CRow>
                   </CForm>
                 </CCardBody>

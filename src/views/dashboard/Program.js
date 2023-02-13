@@ -14,9 +14,9 @@ const Program = () => {
             </h4>
           </CCardHeader>
           <CCardBody>
-            <CRow>
+            <CRow className="mb-3">
               <CCol>
-                <CCardImage orientation="top" src={program2} width={70} height={950} />
+                <CCardImage orientation="top" src={program2} width={70} height={1150} />
               </CCol>
             </CRow>
             <CRow xs={{ cols: 1, gutter: 4 }} md={{ cols: 2 }}>

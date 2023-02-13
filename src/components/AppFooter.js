@@ -6,7 +6,7 @@ const AppFooter = () => {
     <CFooter>
       <div>
         <a href="http://edujobs.id" target="_blank" rel="noopener noreferrer">
-          EMLIKU
+          LPK-EMLIKU
         </a>
       </div>
     </CFooter>
