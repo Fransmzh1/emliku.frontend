@@ -5,13 +5,14 @@ import { CContainer, CSpinner } from '@coreui/react'
 import ProtectedRoute from 'src/layout/ProtectedRoute'
 
 const Registration = React.lazy(() => import('../views/dashboard/Registration'))
-const UserForm = React.lazy(() => import('../views/dashboard/UserForm'))
+const UserForm = React.lazy(() => import('../views/usermgmt/UserForm'))
+const UserList = React.lazy(() => import('../views/usermgmt/UserList'))
 const Compro = React.lazy(() => import('../views/dashboard/Compro'))
 const Program = React.lazy(() => import('../views/dashboard/Program'))
 const Syarat = React.lazy(() => import('../views/dashboard/Syarat'))
-const RegistrationList = React.lazy(() => import('../views/dashboard/RegistrationList'))
+const RegistrationList = React.lazy(() => import('../views/registration/RegistrationList'))
 const RegistrationDetail = React.lazy(() => import('../views/registration/RegistrationDetail'))
-const Login = React.lazy(() => import('../views/pages/login/Login'))
+const Login = React.lazy(() => import('../views/usermgmt/Login'))
 // const Register = React.lazy(() => import('../views/pages/login/Register'))
 
 const AppContent = () => {
@@ -39,6 +40,7 @@ const AppContent = () => {
               name="RegistrationDetail"
               element={<RegistrationDetail />}
             />
+            <Route path="/userlist" exact name="UserList" element={<UserList />} />
             <Route path="/userform" exact name="UserForm" element={<UserForm />} />
           </Route>
         </Routes>

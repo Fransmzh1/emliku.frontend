@@ -117,7 +117,7 @@ const UserForm = () => {
       {pageStatus === 'list' && (
         <CCard className="mb-4">
           <CCardHeader>
-            <h4>Daftar Registrasi</h4>
+            <h4>Daftar User Aplikasi</h4>
           </CCardHeader>
           <CCardBody>
             <DataTable

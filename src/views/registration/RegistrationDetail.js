@@ -35,8 +35,9 @@ const RegistrationDetail = () => {
       try {
         const response = await backendClient({
           method: 'get',
-          url: '/registration?email=' + email,
+          url: '/registration/' + _loginfo.lembaga + '?email=' + email,
           headers: { Authorization: 'Basic ' + _loginfo.basic },
+          withCredentials: true,
         })
         setDetailData(response.data[0])
         setLoading(false)

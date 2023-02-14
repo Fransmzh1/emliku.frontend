@@ -66,6 +66,7 @@ const Login = () => {
         url: '/usermgmt/login',
         data: { email: emailaddr, password: passwd },
         headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
       })
       console.log('Login Sukses')
       // console.log(JSON.stringify(response.data))
@@ -74,7 +75,7 @@ const Login = () => {
         email: emailaddr,
         basic: response.data.accessToken,
         eat: expires_at,
-        regstatus: response.data.regStatus,
+        lembaga: response.data.lembaga,
         admin: response.data.admin,
       }
       sessionStorage.setItem('loginfo', JSON.stringify(_loginfo))

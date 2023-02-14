@@ -38,8 +38,8 @@ const RegistrationList = () => {
       sortable: true,
     },
     {
-      name: 'Propinsi',
-      selector: (row) => row.addrPropinsi,
+      name: 'Tujuan',
+      selector: (row) => row.tujuan,
       sortable: true,
     },
     {
@@ -57,7 +57,7 @@ const RegistrationList = () => {
       nama: h.nama,
       noKtp: h.noKtp,
       registerDate: h.registerDate.substring(0, 10),
-      addrPropinsi: h.addrPropinsi,
+      tujuan: h.negaraTujuan,
     }
   })
 
@@ -68,8 +68,9 @@ const RegistrationList = () => {
       try {
         const response = await backendClient({
           method: 'get',
-          url: '/registration',
+          url: '/registration/' + _loginfo.lembaga,
           headers: { Authorization: 'Basic ' + _loginfo.basic },
+          withCredentials: true,
         })
         setRows(response.data)
         setLoading(false)

@@ -57,7 +57,7 @@ const Registration = () => {
   const [pengalamanketerangan, setPengalamanketerangan] = useState('')
   const [socmed, setSocmed] = useState('')
   const [referalagent, setReferalagent] = useState('')
-  const referalgroupperusahaan = 'EMLIKU'
+  const [lembaga, setLembaga] = useState('EMLIKU')
   const [negaratujuan, setNegaratujuan] = useState('')
   const [program, setProgram] = useState('')
   const [durasiprogram, setDurasiprogram] = useState('')
@@ -366,7 +366,7 @@ const Registration = () => {
       pengalamanketerangan,
       socmed,
       referalagent,
-      referalgroupperusahaan,
+      lembaga,
       negaratujuan,
       program,
       durasiprogram,
@@ -1083,21 +1083,34 @@ const Registration = () => {
                         </CCol>
                       </CRow>
                       <CRow>
-                        <CFormLabel
-                          htmlFor="referalgroupperusahaan"
-                          className="col-sm-3 col-form-label"
-                        >
+                        <CFormLabel htmlFor="lembaga" className="col-sm-3 col-form-label">
                           Lembaga:
                         </CFormLabel>
                         <CCol sm={7}>
-                          <CFormInput
+                          <CFormSelect
+                            size="sm"
+                            id="lembaga"
+                            value={lembaga}
+                            required
+                            onChange={(e) => setLembaga(e.target.value)}
+                          >
+                            <option value="">Pilih Lembaga</option>
+                            <option value="EMLIKU">EMLIKU</option>
+                            <option disabled value="BINAWAN">
+                              BINAWAN
+                            </option>
+                            <option disabled value="AAI">
+                              AAI
+                            </option>
+                          </CFormSelect>
+                          {/* <CFormInput
                             size="sm"
                             type="text"
                             disable="true"
                             value={referalgroupperusahaan}
                             id="referalgroupperusahaan"
                             // onChange={(e) => setReferalgroupperusahaan(e.target.value)}
-                          />
+                          /> */}
                         </CCol>
                       </CRow>
                     </CCardBody>
