@@ -10,6 +10,7 @@ const Compro = React.lazy(() => import('../views/dashboard/Compro'))
 const Program = React.lazy(() => import('../views/dashboard/Program'))
 const Syarat = React.lazy(() => import('../views/dashboard/Syarat'))
 const RegistrationList = React.lazy(() => import('../views/dashboard/RegistrationList'))
+const RegistrationDetail = React.lazy(() => import('../views/registration/RegistrationDetail'))
 const Login = React.lazy(() => import('../views/pages/login/Login'))
 // const Register = React.lazy(() => import('../views/pages/login/Register'))
 
@@ -31,6 +32,12 @@ const AppContent = () => {
               exact
               name="RegistrationList"
               element={<RegistrationList />}
+            />
+            <Route
+              path="/regdetail"
+              exact
+              name="RegistrationDetail"
+              element={<RegistrationDetail />}
             />
             <Route path="/userform" exact name="UserForm" element={<UserForm />} />
           </Route>
