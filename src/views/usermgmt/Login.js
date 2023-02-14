@@ -8,7 +8,6 @@ import {
   CCard,
   CCardBody,
   CCardImage,
-  CCardText,
   CCardTitle,
   CCol,
   CContainer,
@@ -25,9 +24,7 @@ import logo from 'src/assets/brand/lpk_emliku.png'
 import config from 'src/config.js'
 
 const Login = () => {
-  // const [signup, setSignup] = useState(false)
-  // const [formMode, setFormMode] = useState('Login')
-  const [emailaddr, setEmailaddr] = useState()
+  const [username, setUsername] = useState('')
   const [passwd, setPasswd] = useState()
   const [confirmMsg, setConfirmMsg] = useState()
   const [showAlert, setShowAlert] = useState(false)
@@ -39,52 +36,31 @@ const Login = () => {
     baseURL: config.BACKEND_URL,
   })
 
-  // const handleSignup = async (e) => {
-  //   e.preventDefault()
-  //   console.log('Signup')
-  //   try {
-  //     const response = await backendClient({
-  //       method: 'post',
-  //       url: '/usermgmt/register',
-  //       data: { email: emailaddr, password: passwd },
-  //       headers: { 'Content-Type': 'application/json' },
-  //     })
-  //     console.log('Sukses')
-  //     setConfirmMsg('Aktivasi user silakan check di email ' + emailaddr)
-  //     setSignup(false)
-  //   } catch (error) {
-  //     console.log(error.message)
-  //   }
-  // }
-
   const handleLogin = async (e) => {
     e.preventDefault()
-    console.log(emailaddr)
     try {
       const response = await backendClient({
         method: 'post',
         url: '/usermgmt/login',
-        data: { email: emailaddr, password: passwd },
+        data: { nama: username, password: passwd },
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
       console.log('Login Sukses')
-      // console.log(JSON.stringify(response.data))
       let expires_at = new Date().getTime() + 1800000
       let _loginfo = {
-        email: emailaddr,
+        email: username,
+        name: username,
         basic: response.data.accessToken,
         eat: expires_at,
         lembaga: response.data.lembaga,
         admin: response.data.admin,
       }
       sessionStorage.setItem('loginfo', JSON.stringify(_loginfo))
-      setConfirmMsg('Aktivasi user silakan check di email ' + emailaddr)
-      // setSignup(false)
       navigate(forwardTo, { replace: true })
     } catch (error) {
-      console.log(error)
-      setConfirmMsg(error.message)
+      console.log(error.response)
+      setConfirmMsg(error.response.data)
       setShowAlert(true)
     }
   }
@@ -95,22 +71,20 @@ const Login = () => {
         <CRow className="justify-content-center">
           <CCard className="mb-3" style={{ maxWidth: '640px' }}>
             <CRow className="g-0">
-              <CCol className="align-self-center" md={5}>
+              <CCol className="align-self-center" md={3}>
                 <CCardImage src={logo} />
               </CCol>
               <CCol md={7}>
                 <CCardBody>
                   <CCardTitle>Login</CCardTitle>
-                  <CCardText>Login menggunakan email</CCardText>
                   <CForm>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
                       <CFormInput
-                        placeholder="Email"
-                        autoComplete="email"
-                        onChange={(e) => setEmailaddr(e.target.value)}
+                        placeholder="Username"
+                        onChange={(e) => setUsername(e.target.value)}
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -120,7 +94,6 @@ const Login = () => {
                       <CFormInput
                         type="password"
                         placeholder="Password"
-                        autoComplete="current-password"
                         onChange={(e) => setPasswd(e.target.value)}
                       />
                     </CInputGroup>
@@ -130,7 +103,7 @@ const Login = () => {
                           Login
                         </CButton>
                       </CCol>
-                      {showAlert && <CAlert color="primary">{confirmMsg}</CAlert>}
+                      {showAlert && <CAlert color="danger">{confirmMsg}</CAlert>}
                     </CRow>
                   </CForm>
                 </CCardBody>

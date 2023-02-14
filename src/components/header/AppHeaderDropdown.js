@@ -18,8 +18,6 @@ import admin from './../../assets/icons/admin_user_icon.png'
 import axios from 'axios'
 
 const AppHeaderDropdown = () => {
-  // const [loggedAccount, setLoggedAccount] = useState('')
-  const [isAdmin, setIsAdmin] = useState('false')
   const [loginfo, setLoginfo] = useState()
   let navigate = useNavigate()
 
@@ -43,21 +41,10 @@ const AppHeaderDropdown = () => {
     } else {
       navigate('/login', { replace: true })
     }
-    // if (loggedAccount) {
-    //   console.log('akan logout')
-    //   sessionStorage.removeItem('loginfo')
-    //   navigate('/compro', { replace: true })
-    // } else {
-    //   navigate('/login', { replace: true })
-    // }
   }
 
   const handleOnShow = () => {
-    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
-    console.log('handleOnShow1: ' + JSON.stringify(_loginfo))
-    setLoginfo(_loginfo)
-    // setLoggedAccount(loginfo ? loginfo.email : null)
-    setIsAdmin(loginfo ? loginfo.admin : 'false')
+    setLoginfo(JSON.parse(sessionStorage.getItem('loginfo')))
   }
 
   return (
@@ -77,8 +64,10 @@ const AppHeaderDropdown = () => {
         {loginfo && (
           <>
             <CDropdownItem component="button">
-              <CIcon icon={cilSettings} className="me-2" />
-              Ubah Password
+              <CNavLink to="/resetpasswd" component={NavLink}>
+                <CIcon icon={cilSettings} className="me-2" />
+                Ubah Password
+              </CNavLink>
             </CDropdownItem>
             <CDropdownDivider />
             <CDropdownItem component="button">

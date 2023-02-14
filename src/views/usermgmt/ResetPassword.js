@@ -1,106 +1,128 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   CAlert,
   CButton,
   CCard,
   CCardBody,
-  CCardImage,
+  CCardFooter,
+  CCardHeader,
   CCardText,
-  CCardTitle,
   CCol,
   CContainer,
   CForm,
   CFormInput,
-  CInputGroup,
-  CInputGroupText,
+  CFormLabel,
   CRow,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilUser } from '@coreui/icons'
-import logo from 'src/assets/brand/lpk_emliku.png'
+import config from 'src/config'
 
 const ResetPassword = () => {
-  const [emailaddr, setEmailaddr] = useState()
   const [confirmMsg, setConfirmMsg] = useState()
   const [showAlert, setShowAlert] = useState(false)
+  const [oldPasswd, setOldPasswd] = useState('')
+  const [newPasswd1, setNewPasswd1] = useState('')
+  const [newPasswd2, setNewPasswd2] = useState('')
   const navigate = useNavigate()
-  const location = useLocation()
-  const gotoLogin = location.state?.prev ? location.state.prev : '/login'
-
-  const backendClient = axios.create({
-    baseURL: 'http://localhost:8080',
-  })
 
   const handleReset = async (e) => {
     e.preventDefault()
+    if (newPasswd1 !== newPasswd2) {
+      console.log(newPasswd1 + ' ' + newPasswd2)
+      alert('Password baru belum sama')
+      return
+    }
+
+    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
     console.log('Reset')
     try {
-      await backendClient({
+      await axios({
         method: 'post',
-        url: '/resetpw',
-        data: { email: emailaddr },
-        headers: { 'Content-Type': 'application/json' },
+        url: config.BACKEND_URL + '/usermgmt/resetpw',
+        data: { username: _loginfo.name, oldPassword: oldPasswd, newPassword: newPasswd1 },
+        headers: { Authorization: 'Basic ' + _loginfo.basic },
       })
       console.log('Sukses')
-      setConfirmMsg('Info password dikirim ke email.')
+      alert('Sudah berhasil diganti.')
+      sessionStorage.removeItem('loginfo')
       navigate('/login')
     } catch (error) {
       console.log(error.message)
+      setShowAlert(true)
       setConfirmMsg(error.message)
     }
   }
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+    <div className="bg-light min-vh-80 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCard className="mb-3" style={{ maxWidth: '640px' }}>
-            <CRow className="g-0">
-              <CCol className="align-self-center" md={5}>
-                <CCardImage src={logo} />
-              </CCol>
-              <CCol md={7}>
+          <CCol md={10}>
+            <CForm onSubmit={handleReset}>
+              <CCard className="mb-3" style={{ maxWidth: '640px' }}>
+                <CCardHeader>
+                  <h4>Reset Password</h4>
+                </CCardHeader>
                 <CCardBody>
-                  <CCardTitle>Reset Password</CCardTitle>
-                  <CCardText>Masukkan email untuk dikirim info password yang baru</CCardText>
-                  <CForm>
-                    <CInputGroup className="mb-3">
-                      <CInputGroupText>
-                        <CIcon icon={cilUser} />
-                      </CInputGroupText>
+                  <CCardText>Masukkan password lama dan password baru.</CCardText>
+                  <CRow>
+                    <CFormLabel htmlFor="oldpw" className="col-sm-4 col-form-label">
+                      Password Asal:
+                    </CFormLabel>
+                    <CCol sm={7}>
                       <CFormInput
-                        placeholder="Email"
-                        autoComplete="email"
-                        onChange={(e) => setEmailaddr(e.target.value)}
+                        size="sm"
+                        type="password"
+                        required
+                        id="oldpw"
+                        onChange={(e) => setOldPasswd(e.target.value)}
                       />
-                    </CInputGroup>
-                    <CRow>
-                      <CCol xs={6}>
-                        <CButton color="primary" className="px-4" onClick={handleReset}>
-                          Reset
-                        </CButton>
-                      </CCol>
-                      {showAlert && <CAlert color="primary">{confirmMsg}</CAlert>}
-                    </CRow>
-                    <CRow>
-                      <CCol xs={6} className="text-left">
-                        <CButton
-                          color="link"
-                          className="px-0"
-                          onClick={() => navigate(gotoLogin, { replace: true })}
-                        >
-                          Login
-                        </CButton>
-                      </CCol>
-                    </CRow>
-                  </CForm>
+                    </CCol>
+                  </CRow>
+                  <CRow>
+                    <CFormLabel htmlFor="oldpw" className="col-sm-4 col-form-label">
+                      Password Baru:
+                    </CFormLabel>
+                    <CCol sm={7}>
+                      <CFormInput
+                        size="sm"
+                        type="password"
+                        required
+                        id="newpw1"
+                        onChange={(e) => setNewPasswd1(e.target.value)}
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow>
+                    <CFormLabel htmlFor="oldpw" className="col-sm-4 col-form-label">
+                      Konfirmasi :
+                    </CFormLabel>
+                    <CCol sm={7}>
+                      <CFormInput
+                        size="sm"
+                        type="password"
+                        required
+                        id="newpw2"
+                        onChange={(e) => setNewPasswd2(e.target.value)}
+                      />
+                    </CCol>
+                  </CRow>
                 </CCardBody>
-              </CCol>
-            </CRow>
-          </CCard>
+                <CCardFooter>
+                  <CRow>
+                    <CCol xs={6}>
+                      <CButton type="submit" color="primary" className="px-4">
+                        Reset
+                      </CButton>
+                    </CCol>
+                    {showAlert && <CAlert color="primary">{confirmMsg}</CAlert>}
+                  </CRow>
+                </CCardFooter>
+              </CCard>
+            </CForm>
+          </CCol>
         </CRow>
       </CContainer>
     </div>

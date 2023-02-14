@@ -4,7 +4,7 @@ import { CContainer, CSpinner } from '@coreui/react'
 
 import ProtectedRoute from 'src/layout/ProtectedRoute'
 
-const Registration = React.lazy(() => import('../views/dashboard/Registration'))
+const Registration = React.lazy(() => import('../views/registration/Registration'))
 const UserForm = React.lazy(() => import('../views/usermgmt/UserForm'))
 const UserList = React.lazy(() => import('../views/usermgmt/UserList'))
 const Compro = React.lazy(() => import('../views/dashboard/Compro'))
@@ -13,6 +13,7 @@ const Syarat = React.lazy(() => import('../views/dashboard/Syarat'))
 const RegistrationList = React.lazy(() => import('../views/registration/RegistrationList'))
 const RegistrationDetail = React.lazy(() => import('../views/registration/RegistrationDetail'))
 const Login = React.lazy(() => import('../views/usermgmt/Login'))
+const ResetPassword = React.lazy(() => import('../views/usermgmt/ResetPassword'))
 // const Register = React.lazy(() => import('../views/pages/login/Register'))
 
 const AppContent = () => {
@@ -25,6 +26,7 @@ const AppContent = () => {
           <Route path="/program" exact name="Program" element={<Program />} />
           <Route path="/term" exact name="Program" element={<Syarat />} />
           <Route path="/login" name="Login Page" element={<Login />} />
+          <Route path="/resetpasswd" exact name="ResetPassword" element={<ResetPassword />} />
           {/* <Route path="/register" name="Register Page" element={<Register />} /> */}
           <Route path="/registration" exact name="Registration" element={<Registration />} />
           <Route element={<ProtectedRoute />}>

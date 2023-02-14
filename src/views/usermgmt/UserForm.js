@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import {
   CButton,
@@ -10,67 +10,40 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
+  CFormSelect,
   CRow,
 } from '@coreui/react'
 import config from 'src/config.js'
-
-const backendClient = axios.create({
-  baseURL: config.BACKEND_URL,
-})
+import { useNavigate } from 'react-router-dom'
 
 const UserForm = () => {
-  const [rows, setRows] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [showDetail, setShowDetail] = useState(false)
   const [newEmail, setNewEmail] = useState('')
-  const [newLembaga, setNewLembaga] = useState('EMLIKU')
-  const [detailData, setDetailData] = useState()
-  const [errorMsg, setErrorMsg] = useState()
-  const [pageStatus, setPageStatus] = useState('list')
+  const [lembaga, setLembaga] = useState('')
+  const [nama, setNama] = useState('')
 
-  useEffect(() => {
-    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
-    setLoading(true)
-    const loadData = async () => {
-      try {
-        const response = await backendClient({
-          method: 'get',
-          url: '/usermgmt/userlist',
-          headers: { Authorization: 'Basic ' + _loginfo.basic },
-        })
-        // console.log(JSON.stringify(response.data))
-        setRows(response.data)
-        setLoading(false)
-      } catch (error) {
-        console.log(error.message)
-      }
-    }
-    loadData()
-  }, [])
+  const navigate = useNavigate()
 
   const handleNewUser = async () => {
-    setShowDetail(true)
     let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
     const fileHeaders = {
       'Content-Type': 'application/json',
       Authorization: 'Basic ' + _loginfo.basic,
     }
-    const formData = new FormData()
     try {
-      const response = await axios({
+      await axios({
         method: 'post',
         url: config.BACKEND_URL + '/usermgmt/register',
-        data: { email: newEmail, lembaga: newLembaga },
+        data: { nama: nama, email: newEmail, lembaga: lembaga },
         headers: fileHeaders,
       })
-      setLoading(false)
-      console.log(response)
+      alert('Pembuatan User Berhasil.')
+      navigate('/userlist')
     } catch (error) {
-      setLoading(false)
       console.log('ERror response: ' + JSON.stringify(error.response))
       let _response = error.response
-      if (_response.status === 409) setErrorMsg('Data yang sama sudah tercatat')
-      alert('Error: Data yang sama sudah tercatat')
+      if (_response.status === 409) {
+        alert('Error: Data yang sama sudah tercatat')
+      }
     }
   }
 
@@ -82,6 +55,21 @@ const UserForm = () => {
             <h4>Create New User</h4>
           </CCardHeader>
           <CCardBody>
+            <CRow>
+              <CFormLabel htmlFor="email" className="col-sm-3 col-form-label">
+                Nama:
+              </CFormLabel>
+              <CCol sm={7}>
+                <CFormInput
+                  size="sm"
+                  type="text"
+                  value={nama}
+                  required
+                  id="nama"
+                  onChange={(e) => setNama(e.target.value)}
+                />
+              </CCol>
+            </CRow>
             <CRow>
               <CFormLabel htmlFor="email" className="col-sm-3 col-form-label">
                 Email:
@@ -102,20 +90,28 @@ const UserForm = () => {
                 Lembaga:
               </CFormLabel>
               <CCol sm={7}>
-                <CFormInput
+                <CFormSelect
                   size="sm"
-                  type="text"
-                  value={newLembaga}
                   id="lembaga"
-                  disable
-                  // onChange={(e) => setNewLembaga(e.target.value)}
-                />
+                  value={lembaga}
+                  required
+                  onChange={(e) => setLembaga(e.target.value)}
+                >
+                  <option value="">Pilih Lembaga</option>
+                  <option value="EMLIKU">EMLIKU</option>
+                  <option disabled value="BINAWAN">
+                    BINAWAN
+                  </option>
+                  <option disabled value="AAI">
+                    AAI
+                  </option>
+                </CFormSelect>
               </CCol>
             </CRow>
           </CCardBody>
           <CCardFooter>
             <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-              <CButton color="primary" className="me-md-2" onClick={() => setPageStatus('list')}>
+              <CButton color="primary" className="me-md-2" onClick={() => navigate('/userlist')}>
                 Cancel
               </CButton>
               <CButton type="submit" color="primary">
