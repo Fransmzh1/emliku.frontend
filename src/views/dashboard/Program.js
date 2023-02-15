@@ -1,7 +1,7 @@
 import React from 'react'
 import { CCard, CCardBody, CCardHeader, CCardImage, CCardTitle, CCol, CRow } from '@coreui/react'
 
-import program2 from 'src/assets/images/program2.jpg'
+import program from 'src/assets/images/program.jpg'
 
 const Program = () => {
   return (
@@ -16,7 +16,7 @@ const Program = () => {
           <CCardBody>
             <CRow className="mb-3">
               <CCol>
-                <CCardImage orientation="top" src={program2} width={70} height={1150} />
+                <CCardImage orientation="top" src={program} width={70} height={1150} />
               </CCol>
             </CRow>
             <CRow xs={{ cols: 1, gutter: 4 }} md={{ cols: 2 }}>

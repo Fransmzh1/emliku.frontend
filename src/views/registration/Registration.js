@@ -71,6 +71,7 @@ const Registration = () => {
   const [fileBpjs, setFileBpjs] = useState()
   const [fileSkck, setFileSkck] = useState()
   const [fileMcu, setFileMcu] = useState()
+  const [fileAktelahir, setFileAktelahir] = useState()
   const [fileIjazah, setFileIjazah] = useState()
   const [fileSertIelt, setFileSertIelt] = useState()
   const [fileSertN4, setFileSertN4] = useState()
@@ -78,6 +79,7 @@ const Registration = () => {
   const [fileSertJlft, setFileSertJlft] = useState()
   const [filePersetujuanOrtu, setFilePersetujuanOrtu] = useState()
   const [fileBuktiTransfer, setFileBuktiTransfer] = useState()
+  const [fileSertVaksin1, setFileSertVaksin1] = useState()
   const [fileSertVaksin2, setFileSertVaksin2] = useState()
   const [fileSertBooster, setFileSertBooster] = useState()
 
@@ -127,6 +129,8 @@ const Registration = () => {
       setFileSim(e.target.files[0])
     } else if (e.target.id === 'kk') {
       setFileKk(e.target.files[0])
+    } else if (e.target.id === 'aktelahir') {
+      setFileAktelahir(e.target.files[0])
     } else if (e.target.id === 'npwp') {
       setFileNpwp(e.target.files[0])
     } else if (e.target.id === 'bpjs') {
@@ -147,6 +151,8 @@ const Registration = () => {
       setFileSertJft(e.target.files[0])
     } else if (e.target.id === 'persetujuanOrtu') {
       setFilePersetujuanOrtu(e.target.files[0])
+    } else if (e.target.id === 'sertvaksin1') {
+      setFileSertVaksin1(e.target.files[0])
     } else if (e.target.id === 'sertvaksin2') {
       setFileSertVaksin2(e.target.files[0])
     } else if (e.target.id === 'sertbooster') {
@@ -272,6 +278,10 @@ const Registration = () => {
       _filesIncluded += 'sim '
       _files.push(fileSim)
     }
+    if (fileAktelahir) {
+      _filesIncluded += 'aktelahir '
+      _files.push(fileAktelahir)
+    }
     if (fileNpwp) {
       _filesIncluded += 'npwp '
       _files.push(fileNpwp)
@@ -308,6 +318,10 @@ const Registration = () => {
       _filesIncluded += 'sertJft '
       _files.push(fileSertJft)
     }
+    if (fileSertVaksin1) {
+      _filesIncluded += 'vaksin1 '
+      _files.push(fileSertVaksin1)
+    }
     if (fileSertVaksin2) {
       _filesIncluded += 'vaksin2 '
       _files.push(fileSertVaksin2)
@@ -325,8 +339,6 @@ const Registration = () => {
       _files.push(fileBuktiTransfer)
     }
     const formData = new FormData()
-    // info.email = email
-    // formData.append('data', JSON.stringify(info))
     let _data = JSON.stringify(buildData())
     formData.append('data', _data)
     formData.append('filesattached', _filesIncluded)
@@ -1193,6 +1205,20 @@ const Registration = () => {
                             </CCol>
                           </CRow>
                           <CRow>
+                            <CFormLabel htmlFor="aktelahir" className="col-sm-3 col-form-label">
+                              Akte Lahir:
+                            </CFormLabel>
+                            <CCol sm={6}>
+                              <CFormInput
+                                size="sm"
+                                type="file"
+                                id="aktelahir"
+                                required
+                                onChange={handleFileChanges}
+                              />
+                            </CCol>
+                          </CRow>
+                          <CRow>
                             <CFormLabel htmlFor="npwp" className="col-sm-3 col-form-label">
                               NPWP:
                             </CFormLabel>
@@ -1339,6 +1365,20 @@ const Registration = () => {
                               >
                                 <em>download sample</em>
                               </CButton>
+                            </CCol>
+                          </CRow>
+                          <CRow>
+                            <CFormLabel htmlFor="sertvaksin1" className="col-sm-4 col-form-label">
+                              Sertifat Vaksin 1:
+                            </CFormLabel>
+                            <CCol sm={6}>
+                              <CFormInput
+                                size="sm"
+                                type="file"
+                                id="sertvaksin1"
+                                required
+                                onChange={handleFileChanges}
+                              />
                             </CCol>
                           </CRow>
                           <CRow>

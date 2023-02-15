@@ -5,15 +5,15 @@ import config from 'src/config.js'
 import DataTable from 'react-data-table-component'
 import { useNavigate } from 'react-router-dom'
 
-const backendClient = axios.create({
-  baseURL: config.BACKEND_URL,
-})
+// const backendClient = axios.create({
+//   baseURL: config.BACKEND_URL,
+// })
 
 const UserForm = () => {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(false)
 
-  var checkedRows = []
+  // var checkedRows = []
   const navigate = useNavigate()
 
   const columns = [
@@ -51,9 +51,9 @@ const UserForm = () => {
     setLoading(true)
     const loadData = async () => {
       try {
-        const response = await backendClient({
+        const response = await axios({
           method: 'get',
-          url: '/usermgmt/userlist',
+          url: config.BACKEND_URL + '/usermgmt/userlist',
           headers: { Authorization: 'Basic ' + _loginfo.basic },
         })
         // console.log(JSON.stringify(response.data))
@@ -66,10 +66,10 @@ const UserForm = () => {
     loadData()
   }, [])
 
-  const handleRowSelected = ({ selectedRows }) => {
-    checkedRows = selectedRows
-    console.log('selected ' + JSON.stringify(checkedRows))
-  }
+  // const handleRowSelected = ({ selectedRows }) => {
+  //   checkedRows = selectedRows
+  //   console.log('selected ' + JSON.stringify(checkedRows))
+  // }
 
   // const handleNewUser = async () => {
   //   let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
@@ -105,10 +105,10 @@ const UserForm = () => {
         <CCardBody>
           <DataTable
             pagination
-            selectableRows
-            selectableRowsHighlight
-            selectableRowsVisibleOnly="true"
-            onSelectedRowsChange={handleRowSelected}
+            // selectableRows
+            // selectableRowsHighlight
+            // selectableRowsVisibleOnly="true"
+            // onSelectedRowsChange={handleRowSelected}
             highlightOnHover
             columns={columns}
             data={items}
