@@ -256,7 +256,7 @@ const RegistrationDetail = () => {
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Lembaga:</CCol>
-                  <CCol>{detailData.referalGroupPerusahaan}</CCol>
+                  <CCol>{detailData.lembaga}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Negara Tujuan:</CCol>

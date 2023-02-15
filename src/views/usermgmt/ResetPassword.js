@@ -117,6 +117,15 @@ const ResetPassword = () => {
                         Reset
                       </CButton>
                     </CCol>
+                    <CCol xs={6}>
+                      <CButton
+                        color="primary"
+                        className="px-4"
+                        onClick={() => navigate('/registrationlist')}
+                      >
+                        Cancel
+                      </CButton>
+                    </CCol>
                     {showAlert && <CAlert color="primary">{confirmMsg}</CAlert>}
                   </CRow>
                 </CCardFooter>

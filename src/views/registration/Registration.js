@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 
 import {
   CButton,
@@ -114,8 +114,8 @@ const Registration = () => {
 
   const handleFileChanges = (e) => {
     console.log('Change file size ' + e.target.files[0].size)
-    if (e.target.files[0].size > 2097152) {
-      alert('Ukuran file tidak boleh lebih dari 2 MB')
+    if (e.target.files[0].size > 3197152) {
+      alert('Ukuran file tidak boleh lebih dari 3 MB')
       e.target.files[0] = null
       return false
     }
@@ -178,7 +178,8 @@ const Registration = () => {
         setAlertMsg(response.data.message)
         setAlertEmailVisible(true)
       } else {
-        alert('Silakan periksa email untuk info PIN')
+        setAlertMsg('PIN sudah dikirim ke alamat email.')
+        setAlertPinVisible(true)
       }
     } catch (error) {
       console.log(error.message)
@@ -198,7 +199,14 @@ const Registration = () => {
       })
       setLoading(false)
       setEmailVerified(response.data.status === 'OK' ? true : false)
-      if (response.data.status !== 'OK') {
+      if (response.data.status === 'OK') setEmailVerified(true)
+      else if (response.data.status === 'REGISTERED') {
+        setEmailVerified(true)
+        setNewreg(false)
+        setAlertMsg(response.data.message)
+        setAlertVisible(true)
+      } else {
+        setNewreg(false)
         setAlertMsg(response.data.message)
         setAlertPinVisible(true)
       }
@@ -404,6 +412,7 @@ const Registration = () => {
       setLoading(false)
       console.log('response')
       console.log(JSON.stringify(response))
+      setAlertMsg('Aplikasi anda sudah dikirim.')
       setAlertVisible(true)
       setNewreg(false)
     } catch (error) {
@@ -1471,8 +1480,8 @@ const Registration = () => {
   )
 }
 
-Registration.propTypes = {
-  email: PropTypes.string,
-}
+// Registration.propTypes = {
+//   email: PropTypes.string,
+// }
 
 export default Registration
