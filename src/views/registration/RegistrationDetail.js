@@ -12,7 +12,7 @@ import {
 } from '@coreui/react'
 import config from 'src/config.js'
 import PropTypes from 'prop-types'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const backendClient = axios.create({
   baseURL: config.BACKEND_URL,
@@ -24,21 +24,26 @@ const RegistrationDetail = () => {
   const [ktpUrl, setKtpUrl] = useState(null)
   const [photoUrl, setPhotoUrl] = useState(null)
 
-  const location = useLocation()
   const navigate = useNavigate()
+  const emailKandidat = sessionStorage.getItem('kandidatemail')
+  const authCode = sessionStorage.getItem('authCode')
+  const prev = sessionStorage.getItem('prevloc')
+  const usertype = sessionStorage.getItem('userType')
 
   useEffect(() => {
     setLoading(true)
-    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
-    let email = location.state.email
+    // console.log('emailAddr: ' + emailAddr)
+    // console.log('authCode: ' + authCode)
+    // setPrevLocation(prev)
     const loadData = async () => {
       try {
         const response = await backendClient({
           method: 'get',
-          url: '/registration/' + _loginfo.lembaga + '?email=' + email,
-          headers: { Authorization: 'Basic ' + _loginfo.basic },
+          url: '/registration?email=' + emailKandidat,
+          headers: { Authorization: 'Basic ' + authCode },
           withCredentials: true,
         })
+        console.log(JSON.stringify(response.data))
         setDetailData(response.data[0])
         setLoading(false)
       } catch (error) {
@@ -47,10 +52,10 @@ const RegistrationDetail = () => {
       }
     }
     loadData()
-  }, [location.state.email])
+  }, [authCode, emailKandidat])
 
   useEffect(() => {
-    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
+    // let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
     if (!detailData.email) return
     console.log('akan ambil gambar ' + detailData.email)
     const loadData = async () => {
@@ -58,7 +63,7 @@ const RegistrationDetail = () => {
         const response = await backendClient({
           method: 'get',
           url: '/download/file/photo?email=' + detailData.email,
-          headers: { Authorization: 'Basic ' + _loginfo.basic },
+          headers: { Authorization: 'Basic ' + authCode },
           responseType: 'blob',
         })
         const blob = new Blob([response.data], { type: 'application/zip' })
@@ -74,7 +79,7 @@ const RegistrationDetail = () => {
         const response = await backendClient({
           method: 'get',
           url: '/download/file/ktp?email=' + detailData.email,
-          headers: { Authorization: 'Basic ' + _loginfo.basic },
+          headers: { Authorization: 'Basic ' + authCode },
           responseType: 'blob',
         })
         const blob = new Blob([response.data], { type: 'application/zip' })
@@ -88,11 +93,11 @@ const RegistrationDetail = () => {
       }
     }
     loadData()
-  }, [detailData])
+  }, [detailData, authCode])
 
   const handleDownloadDataDetail = async () => {
     let emails = [detailData.email]
-    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
+    // let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
     console.log('downloading ' + JSON.stringify(emails))
     setLoading(true)
     const formData = emails
@@ -101,7 +106,7 @@ const RegistrationDetail = () => {
         method: 'post',
         url: '/download/registration',
         data: formData,
-        headers: { Authorization: 'Basic ' + _loginfo.basic },
+        headers: { Authorization: 'Basic ' + authCode },
         responseType: 'blob',
       })
       const blob = new Blob([response.data], { type: 'application/zip' })
@@ -283,13 +288,15 @@ const RegistrationDetail = () => {
             <CButton
               color="primary"
               className="me-md-2"
-              onClick={() => navigate('/registrationlist')}
+              onClick={() => navigate(prev, { replace: true })}
             >
               Back
             </CButton>
-            <CButton color="primary" onClick={handleDownloadDataDetail}>
-              Download
-            </CButton>
+            {usertype === 'admin' && (
+              <CButton color="primary" onClick={handleDownloadDataDetail}>
+                Download
+              </CButton>
+            )}
           </div>
         </CCardFooter>
       </CCard>

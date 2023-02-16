@@ -45,7 +45,12 @@ const RegistrationList = () => {
     {
       name: 'Show',
       cell: (row) => (
-        <button onClick={() => navigate('/regdetail', { state: { email: row.email } })}>
+        <button
+          onClick={
+            () => handleShowDetail(row.email)
+            // navigate('/regdetail', { state: { emailAddr: row.email, authCode: authCode } })
+          }
+        >
           Detail
         </button>
       ),
@@ -62,14 +67,14 @@ const RegistrationList = () => {
   })
 
   useEffect(() => {
-    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
+    // let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
     setLoading(true)
     const loadData = async () => {
       try {
         const response = await backendClient({
           method: 'get',
-          url: '/registration/' + _loginfo.lembaga,
-          headers: { Authorization: 'Basic ' + _loginfo.basic },
+          url: '/registration',
+          headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
           withCredentials: true,
         })
         setRows(response.data)
@@ -80,6 +85,13 @@ const RegistrationList = () => {
     }
     loadData()
   }, [])
+
+  const handleShowDetail = (email) => {
+    console.log('show detail untukk ' + email)
+    sessionStorage.setItem('kandidatemail', email)
+    sessionStorage.setItem('prevloc', '/registrationlist')
+    navigate('/regdetail')
+  }
 
   const handleRowSelected = ({ selectedRows }) => {
     // setSelectedRows((prevState) => {
@@ -101,7 +113,7 @@ const RegistrationList = () => {
       return
     }
     let emails = checkedRows.map((r) => r.email)
-    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
+    // let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
     console.log('downloading ' + JSON.stringify(emails))
     setLoading(true)
     const formData = emails
@@ -110,7 +122,7 @@ const RegistrationList = () => {
         method: 'post',
         url: '/download/registration',
         data: formData,
-        headers: { Authorization: 'Basic ' + _loginfo.basic },
+        headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
         responseType: 'blob',
       })
       const blob = new Blob([response.data], { type: 'application/zip' })

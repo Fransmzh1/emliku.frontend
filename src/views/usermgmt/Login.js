@@ -47,16 +47,21 @@ const Login = () => {
         withCredentials: true,
       })
       console.log('Login Sukses')
-      let expires_at = new Date().getTime() + 1800000
-      let _loginfo = {
-        email: username,
-        name: username,
-        basic: response.data.accessToken,
-        eat: expires_at,
-        lembaga: response.data.lembaga,
-        admin: response.data.admin,
-      }
-      sessionStorage.setItem('loginfo', JSON.stringify(_loginfo))
+      console.log(response.data)
+      // let expires_at = new Date().getTime() + 1800000
+      // let _loginfo = {
+      //   email: username,
+      //   name: username,
+      //   basic: response.data.accessToken,
+      //   eat: expires_at,
+      //   lembaga: response.data.lembaga,
+      //   admin: response.data.admin,
+      // }
+      // sessionStorage.setItem('loginfo', JSON.stringify(_loginfo))
+      sessionStorage.setItem('userType', 'operator')
+      sessionStorage.setItem('authCode', response.data.accessToken)
+      sessionStorage.setItem('username', username)
+
       navigate(forwardTo, { replace: true })
     } catch (error) {
       console.log(error.response)

@@ -55,12 +55,14 @@ const UserForm = () => {
           method: 'get',
           url: config.BACKEND_URL + '/usermgmt/userlist',
           headers: { Authorization: 'Basic ' + _loginfo.basic },
+          // headers: { Authorization: 'Basic ZnJhbnMubWF6aGFyQGdtYWlsLmNvbTpmYXJpemdhMQ==' },
         })
         // console.log(JSON.stringify(response.data))
         setRows(response.data)
         setLoading(false)
       } catch (error) {
-        console.log(error.message)
+        console.log('dalam error')
+        console.log(error)
       }
     }
     loadData()

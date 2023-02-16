@@ -48,7 +48,7 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink to="/registration" component={NavLink}>
+            <CNavLink to="/loginpelamar" component={NavLink}>
               <CIcon icon={cilBell} size="lg" />
               Formulir Registrasi
             </CNavLink>
