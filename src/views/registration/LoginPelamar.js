@@ -11,21 +11,18 @@ import {
   CFormInput,
   CFormLabel,
   CCardHeader,
-  CAlert,
   CCardSubtitle,
   CCardText,
 } from '@coreui/react'
 import config from 'src/config.js'
 import { Navigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const LoginPelamar = () => {
   const [pin, setPin] = useState('')
   const [email, setEmail] = useState('')
   const [authCode, setAuthCode] = useState('')
   const [loading, setLoading] = useState(false)
-  const [alertEmailVisible, setAlertEmailVisible] = useState(false)
-  const [alertPinVisible, setAlertPinVisible] = useState(false)
-  const [alertMsg, setAlertMsg] = useState()
   const [redirect, setRedirect] = useState()
 
   const handleRequestPin = async (e) => {
@@ -41,14 +38,13 @@ const LoginPelamar = () => {
       setLoading(false)
       console.log(JSON.stringify(response))
       if (response.data.status !== 'OK') {
-        setAlertMsg(response.data.message)
-        setAlertEmailVisible(true)
+        toast.warning(response.data.message)
       } else {
-        setAlertMsg('PIN sudah dikirim ke alamat email.')
-        setAlertPinVisible(true)
+        toast.info('PIN sudah dikirim ke alamat email')
       }
     } catch (error) {
       console.log(error.message)
+      toast.error(error.message)
     }
   }
 
@@ -78,16 +74,13 @@ const LoginPelamar = () => {
         sessionStorage.setItem('userType', 'pelamar')
         sessionStorage.setItem('regStatus', response.data.regStatus)
         setAuthCode(response.data.token)
-        // if (response.data.regStatus === 'submit') setRedirect('/regdetail2')
-        // else setRedirect('/registrationentry')
         setRedirect(response.data.regStatus === 'submit' ? '/regdetail2' : '/registrationentry')
       } else {
         console.log(response.data.message)
-        setAlertMsg(response.data.message)
-        setAlertPinVisible(true)
+        toast.error(response.data.message, { position: 'bottom-center' })
       }
     } catch (error) {
-      console.log(error.message)
+      toast.error(error.message)
     }
   }
 
@@ -119,15 +112,6 @@ const LoginPelamar = () => {
               <CButton onClick={handleRequestPin}>Minta PIN</CButton>
             </CCol>
           </CRow>
-          {alertEmailVisible && (
-            <CRow>
-              <CCol sm={6}>
-                <CAlert color="danger" dismissible onClose={() => setAlertEmailVisible(false)}>
-                  {alertMsg}
-                </CAlert>
-              </CCol>
-            </CRow>
-          )}
           <CRow>
             <CCardText>Masukkan no PIN yang diterima dari email </CCardText>
           </CRow>
@@ -149,15 +133,6 @@ const LoginPelamar = () => {
               <CButton onClick={handleSubmitPin}>Submit PIN</CButton>
             </CCol>
           </CRow>
-          {alertPinVisible && (
-            <CRow>
-              <CCol sm={6}>
-                <CAlert color="danger" dismissible onClose={() => setAlertPinVisible(false)}>
-                  {alertMsg}
-                </CAlert>
-              </CCol>
-            </CRow>
-          )}
         </CCardBody>
       </CCard>
       {redirect && (

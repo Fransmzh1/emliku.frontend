@@ -1,5 +1,7 @@
 import React from 'react'
+import { ToastContainer } from 'react-toastify'
 import { AppContent, AppFooter, AppHeader } from '../components/index'
+import 'react-toastify/dist/ReactToastify.css'
 
 const DefaultLayout = () => {
   return (
@@ -11,6 +13,7 @@ const DefaultLayout = () => {
         </div>
         <AppFooter />
       </div>
+      <ToastContainer position="bottom-center" />
     </div>
   )
 }

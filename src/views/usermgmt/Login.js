@@ -3,7 +3,6 @@ import axios from 'axios'
 
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  CAlert,
   CButton,
   CCard,
   CCardBody,
@@ -22,12 +21,11 @@ import PropTypes from 'prop-types'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import logo from 'src/assets/brand/lpk_emliku.png'
 import config from 'src/config.js'
+import { toast } from 'react-toastify'
 
 const Login = () => {
   const [username, setUsername] = useState('')
   const [passwd, setPasswd] = useState()
-  const [confirmMsg, setConfirmMsg] = useState()
-  const [showAlert, setShowAlert] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const forwardTo = location.state?.prev ? location.state.prev : '/registrationlist'
@@ -46,8 +44,7 @@ const Login = () => {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
-      console.log('Login Sukses')
-      console.log(response.data)
+      console.log('Login sukses: ' + response.data)
       // let expires_at = new Date().getTime() + 1800000
       // let _loginfo = {
       //   email: username,
@@ -65,8 +62,7 @@ const Login = () => {
       navigate(forwardTo, { replace: true })
     } catch (error) {
       console.log(error.response)
-      setConfirmMsg(error.response.data)
-      setShowAlert(true)
+      toast.error(error.response.data)
     }
   }
 
@@ -108,7 +104,6 @@ const Login = () => {
                           Login
                         </CButton>
                       </CCol>
-                      {showAlert && <CAlert color="danger">{confirmMsg}</CAlert>}
                     </CRow>
                   </CForm>
                 </CCardBody>

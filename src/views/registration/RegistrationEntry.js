@@ -59,6 +59,7 @@ const RegistrationEntry = () => {
   const [program, setProgram] = useState('')
   const [durasiprogram, setDurasiprogram] = useState('')
 
+  const [files, setFiles] = useState({})
   const [filePhoto, setFilePhoto] = useState()
   const [fileKtp, setFileKtp] = useState()
   const [filePassport, setFilePassport] = useState()
@@ -115,6 +116,7 @@ const RegistrationEntry = () => {
 
   const handleFileChanges = (e) => {
     console.log('Change file size ' + e.target.files[0].size)
+    setFiles({ ...files, [e.target.id]: e.target.files[0] })
     if (e.target.files[0].size > 3197152) {
       alert('Ukuran file tidak boleh lebih dari 3 MB')
       e.target.files[0] = null
