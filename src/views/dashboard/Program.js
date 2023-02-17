@@ -16,11 +16,11 @@ const Program = () => {
           <CCardBody>
             <CRow className="mb-3">
               <CCol>
-                <CCardImage orientation="top" src={program} width={70} height={1150} />
+                <CCardImage orientation="top" src={program} fluid />
               </CCol>
             </CRow>
             <CRow xs={{ cols: 1, gutter: 4 }} md={{ cols: 2 }}>
-              <CCol xs={4}>
+              <CCol sm>
                 <CCard>
                   <CCardBody>
                     <CCardTitle>Negara Tujuan</CCardTitle>
@@ -33,7 +33,7 @@ const Program = () => {
                   </CCardBody>
                 </CCard>
               </CCol>
-              <CCol xs>
+              <CCol sm>
                 <CCard>
                   <CCardBody>
                     <CCardTitle>Sektor Pekerjaan Jepang</CCardTitle>
@@ -52,7 +52,7 @@ const Program = () => {
                   </CCardBody>
                 </CCard>
               </CCol>
-              <CCol xs>
+              <CCol sm>
                 <CCard>
                   <CCardBody>
                     <CCardTitle>Program Kerja</CCardTitle>

@@ -66,7 +66,8 @@ const RegistrationDetail = () => {
           headers: { Authorization: 'Basic ' + authCode },
           responseType: 'blob',
         })
-        const blob = new Blob([response.data], { type: 'application/zip' })
+        console.log(JSON.stringify(response))
+        const blob = new Blob([response.data], { type: 'image/jpeg' })
         const url = URL.createObjectURL(blob)
         setPhotoUrl(url)
         console.log('done download foto')
@@ -82,7 +83,7 @@ const RegistrationDetail = () => {
           headers: { Authorization: 'Basic ' + authCode },
           responseType: 'blob',
         })
-        const blob = new Blob([response.data], { type: 'application/zip' })
+        const blob = new Blob([response.data], { type: 'image/jpeg' })
         const url = URL.createObjectURL(blob)
         setKtpUrl(url)
         console.log('done download ktp')

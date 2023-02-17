@@ -15,6 +15,7 @@ import {
 } from '@coreui/react'
 import config from 'src/config.js'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const UserForm = () => {
   const [newEmail, setNewEmail] = useState('')
@@ -24,10 +25,10 @@ const UserForm = () => {
   const navigate = useNavigate()
 
   const handleNewUser = async () => {
-    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
+    let authcode = sessionStorage.getItem('authCode')
     const fileHeaders = {
       'Content-Type': 'application/json',
-      Authorization: 'Basic ' + _loginfo.basic,
+      Authorization: 'Basic ' + authcode,
     }
     try {
       await axios({
@@ -36,13 +37,13 @@ const UserForm = () => {
         data: { nama: nama, email: newEmail, lembaga: lembaga },
         headers: fileHeaders,
       })
-      alert('Pembuatan User Berhasil.')
+      toast.success('Pembuatan User Berhasil.')
       navigate('/userlist')
     } catch (error) {
       console.log('ERror response: ' + JSON.stringify(error.response))
       let _response = error.response
       if (_response.status === 409) {
-        alert('Error: Data yang sama sudah tercatat')
+        toast.error('Error: Data yang sama sudah tercatat')
       }
     }
   }

@@ -55,7 +55,7 @@ const Login = () => {
       //   admin: response.data.admin,
       // }
       // sessionStorage.setItem('loginfo', JSON.stringify(_loginfo))
-      sessionStorage.setItem('userType', 'operator')
+      sessionStorage.setItem('userType', response.data.admin === 'true' ? 'admin' : 'operator')
       sessionStorage.setItem('authCode', response.data.accessToken)
       sessionStorage.setItem('username', username)
 

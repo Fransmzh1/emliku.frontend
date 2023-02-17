@@ -24,7 +24,7 @@ const Syarat = React.lazy(() => import('../views/dashboard/Syarat'))
 
 const AppContent = () => {
   return (
-    <CContainer lg>
+    <CContainer fluid>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           <Route path="/" element={<Navigate to="compro" replace />} />
@@ -34,8 +34,6 @@ const AppContent = () => {
           <Route path="/login" name="Login Page" element={<Login />} />
           <Route path="/loginpelamar" name="Login Pelamar" element={<LoginPelamar />} />
           <Route path="/resetpasswd" exact name="ResetPassword" element={<ResetPassword />} />
-          {/* <Route path="/register" name="Register Page" element={<Register />} /> */}
-          {/* <Route path="/registration" exact name="Registration" element={<Registration />} /> */}
           <Route element={<ProtectedPelamar />}>
             <Route
               path="/registrationentry"

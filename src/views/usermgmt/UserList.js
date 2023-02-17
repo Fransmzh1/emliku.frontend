@@ -5,15 +5,10 @@ import config from 'src/config.js'
 import DataTable from 'react-data-table-component'
 import { useNavigate } from 'react-router-dom'
 
-// const backendClient = axios.create({
-//   baseURL: config.BACKEND_URL,
-// })
-
 const UserForm = () => {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // var checkedRows = []
   const navigate = useNavigate()
 
   const columns = [
@@ -47,17 +42,15 @@ const UserForm = () => {
   })
 
   useEffect(() => {
-    let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
+    let authcode = sessionStorage.getItem('authCode')
     setLoading(true)
     const loadData = async () => {
       try {
         const response = await axios({
           method: 'get',
           url: config.BACKEND_URL + '/usermgmt/userlist',
-          headers: { Authorization: 'Basic ' + _loginfo.basic },
-          // headers: { Authorization: 'Basic ZnJhbnMubWF6aGFyQGdtYWlsLmNvbTpmYXJpemdhMQ==' },
+          headers: { Authorization: 'Basic ' + authcode },
         })
-        // console.log(JSON.stringify(response.data))
         setRows(response.data)
         setLoading(false)
       } catch (error) {
@@ -107,10 +100,6 @@ const UserForm = () => {
         <CCardBody>
           <DataTable
             pagination
-            // selectableRows
-            // selectableRowsHighlight
-            // selectableRowsVisibleOnly="true"
-            // onSelectedRowsChange={handleRowSelected}
             highlightOnHover
             columns={columns}
             data={items}

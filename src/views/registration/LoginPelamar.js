@@ -12,7 +12,7 @@ import {
   CFormLabel,
   CCardHeader,
   CCardSubtitle,
-  CCardText,
+  CCardTitle,
 } from '@coreui/react'
 import config from 'src/config.js'
 import { Navigate } from 'react-router-dom'
@@ -87,50 +87,58 @@ const LoginPelamar = () => {
   return (
     <>
       <CCard>
-        <CCardHeader>Verifikasi Email</CCardHeader>
+        <CCardHeader>
+          <CCardTitle>Verifikasi Email</CCardTitle>
+        </CCardHeader>
         <CCardBody>
-          <CCardSubtitle>
-            Sebelum melakukan registrasi, verifikasi email anda dahulu.
-            <p>Masukkan email address, lalu klik tombol &apos;Minta PIN&apos;</p>
-            <p>PIN akan dikirim melakukan email</p>
-          </CCardSubtitle>
-          <CRow>
-            <CFormLabel htmlFor="checkemail" className="col-sm-3 col-form-label">
-              Email:
-            </CFormLabel>
-            <CCol sm={6}>
-              <CFormInput
-                size="sm"
-                type="text"
-                id="checkemail"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </CCol>
-            <CCol sm={3}>
-              <CButton onClick={handleRequestPin}>Minta PIN</CButton>
-            </CCol>
-          </CRow>
-          <CRow>
-            <CCardText>Masukkan no PIN yang diterima dari email </CCardText>
-          </CRow>
-          <CRow>
-            <CFormLabel htmlFor="pin" className="col-sm-3 col-form-label">
-              No PIN:
-            </CFormLabel>
-            <CCol sm={6}>
-              <CFormInput
-                size="sm"
-                type="text"
-                id="pin"
-                required
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-              />
-            </CCol>
-            <CCol sm={2}>
-              <CButton onClick={handleSubmitPin}>Submit PIN</CButton>
+          <CRow className="mb-3 justify-content-center">
+            <CCol sm={10}>
+              <CCardSubtitle>
+                Sebelum melakukan registrasi, verifikasi email anda dahulu.
+                <p>Masukkan email address, lalu klik tombol &apos;Minta PIN&apos;</p>
+                <p>PIN akan dikirim melalui email</p>
+              </CCardSubtitle>
+              <CRow className="mb-3 justify-content-start">
+                <CCol sm={3}>
+                  <CFormLabel htmlFor="checkemail" className="col-sm-3 col-form-label">
+                    Email:
+                  </CFormLabel>
+                </CCol>
+                <CCol sm={4}>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    id="checkemail"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </CCol>
+                <CCol sm={3}>
+                  <CButton onClick={handleRequestPin}>Minta PIN</CButton>
+                </CCol>
+              </CRow>
+              <CRow>
+                <CCardSubtitle>Masukkan no PIN yang diterima dari email </CCardSubtitle>
+              </CRow>
+              <CRow>
+                <CFormLabel htmlFor="pin" className="col-sm-3 col-form-label">
+                  No PIN:
+                </CFormLabel>
+                <CCol sm={4}>
+                  <CFormInput
+                    size="sm"
+                    type="text"
+                    id="pin"
+                    required
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
+                  />
+                </CCol>
+                <CCol sm={3}>
+                  <CButton onClick={handleSubmitPin}>Submit PIN</CButton>
+                </CCol>
+              </CRow>
             </CCol>
           </CRow>
         </CCardBody>
