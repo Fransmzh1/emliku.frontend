@@ -15,13 +15,13 @@ import {
   CCardHeader,
   CFooter,
   CSpinner,
-  CAlert,
   CFormCheck,
   CCardTitle,
   CCardSubtitle,
 } from '@coreui/react'
 import config from 'src/config.js'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const RegistrationEntry = () => {
   // const [emailAddr, setEmailAddr] = useState('')
@@ -89,13 +89,15 @@ const RegistrationEntry = () => {
   const [newreg, setNewreg] = useState(true)
   const [disclaimer, setDisclaimer] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [alertVisible, setAlertVisible] = useState(false)
-  const [alertMsg, setAlertMsg] = useState()
+  // const [alertVisible, setAlertVisible] = useState(false)
+  // const [alertMsg, setAlertMsg] = useState()
   // const [submitStatus, setSubmitStatus] = useState('new')
 
   const email = sessionStorage.getItem('kandidatemail')
   const authCode = sessionStorage.getItem('authCode')
   const regstatus = sessionStorage.getItem('regStatus')
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     setLoading(true)
@@ -369,15 +371,21 @@ const RegistrationEntry = () => {
       setLoading(false)
       console.log('response')
       console.log(JSON.stringify(response))
-      setAlertMsg('Aplikasi anda sudah dikirim.')
-      setAlertVisible(true)
+      // setAlertMsg('Aplikasi anda sudah dikirim.')
+      // setAlertVisible(true)
+      toast.success('Data registrasi anda berhasil dikirim', {
+        autoClose: false,
+        hideProgressBar: true,
+        onClose: () => navigate('/regdetail2'),
+      })
       setNewreg(false)
     } catch (error) {
       console.log('ada error')
       console.log(JSON.stringify(error))
-      setAlertMsg(error.message)
+      // setAlertMsg(error.message)
       setLoading(false)
-      setAlertVisible(true)
+      // setAlertVisible(true)
+      toast.error(error.message)
     }
   }
 
@@ -876,13 +884,17 @@ const RegistrationEntry = () => {
                         Lama Kerja:
                       </CFormLabel>
                       <CCol sm={4}>
-                        <CFormInput
+                        <CFormSelect
                           size="sm"
-                          type="text"
                           id="lamakerja"
                           value={pengalamanlamakerja}
                           onChange={(e) => setPengalamanlamakerja(e.target.value)}
-                        />
+                        >
+                          <option value="">Pilih Lama kerja</option>
+                          <option value="dibawah-satu-thn">dibawah 1 tahun</option>
+                          <option value="antara-1-3-thn">1 - 3 tahun</option>
+                          <option value="diatas-3-thn">diatas 3 tahun</option>
+                        </CFormSelect>
                       </CCol>
                     </CRow>
                     <CRow>
@@ -1358,16 +1370,16 @@ const RegistrationEntry = () => {
                 {loading && <CSpinner component="span" size="sm" aria-hidden="true" />}
                 Submit Formulir
               </CButton>
-              {alertVisible && (
+              {/* {alertVisible && (
                 <CAlert
                   color={alertMsg ? 'danger' : 'primary'}
                   dismissible
                   visible={alertVisible}
                   onClose={() => setAlertVisible(false)}
                 >
-                  {alertMsg ? alertMsg : 'Submit informasi berhasil!'}
-                </CAlert>
-              )}
+                  {alertMsg ? alertMsg : 'Submit informasi berhasil!'} 
+                 </CAlert> 
+              )} */}
             </CRow>
           </CFooter>
         </CCard>
