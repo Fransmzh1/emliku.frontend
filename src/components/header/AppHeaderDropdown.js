@@ -39,6 +39,8 @@ const AppHeaderDropdown = () => {
         sessionStorage.removeItem('userType')
         sessionStorage.removeItem('authCode')
         setUsername()
+        setAuthcode()
+        setUsertype()
         // setLoginfo()
       } catch (error) {
         console.log(error)
@@ -68,9 +70,9 @@ const AppHeaderDropdown = () => {
         </CDropdownHeader>
         <CDropdownItem component="button" onClick={loginlogout}>
           <CIcon icon={cilUser} className="me-2" />
-          {authcode ? 'Logout' : 'Login'}
+          {username ? 'Logout' : 'Login'}
         </CDropdownItem>
-        {authcode && (
+        {username && (
           <>
             <CDropdownItem component="button">
               <CNavLink to="/resetpasswd" component={NavLink}>
