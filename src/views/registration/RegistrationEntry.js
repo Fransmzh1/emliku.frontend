@@ -89,9 +89,6 @@ const RegistrationEntry = () => {
   const [newreg, setNewreg] = useState(true)
   const [disclaimer, setDisclaimer] = useState(false)
   const [loading, setLoading] = useState(false)
-  // const [alertVisible, setAlertVisible] = useState(false)
-  // const [alertMsg, setAlertMsg] = useState()
-  // const [submitStatus, setSubmitStatus] = useState('new')
 
   const email = sessionStorage.getItem('kandidatemail')
   const authCode = sessionStorage.getItem('authCode')
@@ -467,7 +464,8 @@ const RegistrationEntry = () => {
                         >
                           <option value="">Pilih Agama</option>
                           <option value="islam">Islam</option>
-                          <option value="kristen">Kristen</option>
+                          <option value="katolik">Katolik</option>
+                          <option value="protestan">Protestan</option>
                           <option value="budha">Budha</option>
                           <option value="hindu">Hindu</option>
                           <option value="konghucu">KongHuCu</option>
@@ -1370,16 +1368,6 @@ const RegistrationEntry = () => {
                 {loading && <CSpinner component="span" size="sm" aria-hidden="true" />}
                 Submit Formulir
               </CButton>
-              {/* {alertVisible && (
-                <CAlert
-                  color={alertMsg ? 'danger' : 'primary'}
-                  dismissible
-                  visible={alertVisible}
-                  onClose={() => setAlertVisible(false)}
-                >
-                  {alertMsg ? alertMsg : 'Submit informasi berhasil!'} 
-                 </CAlert> 
-              )} */}
             </CRow>
           </CFooter>
         </CCard>

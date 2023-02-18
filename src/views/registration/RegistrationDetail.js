@@ -11,39 +11,34 @@ import {
   CRow,
 } from '@coreui/react'
 import config from 'src/config.js'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
-
+import attachmentList from './attachmentList'
+import FileLinkRow from './FileLinkRow'
 const backendClient = axios.create({
   baseURL: config.BACKEND_URL,
 })
 
 const RegistrationDetail = () => {
   const [loading, setLoading] = useState(false)
-  const [detailData, setDetailData] = useState({})
+  const [detailData, setDetailData] = useState()
   const [ktpUrl, setKtpUrl] = useState(null)
   const [photoUrl, setPhotoUrl] = useState(null)
 
   const navigate = useNavigate()
-  const emailKandidat = sessionStorage.getItem('kandidatemail')
-  const authCode = sessionStorage.getItem('authCode')
   const prev = sessionStorage.getItem('prevloc')
   const usertype = sessionStorage.getItem('userType')
 
   useEffect(() => {
     setLoading(true)
-    // console.log('emailAddr: ' + emailAddr)
-    // console.log('authCode: ' + authCode)
-    // setPrevLocation(prev)
     const loadData = async () => {
       try {
         const response = await backendClient({
           method: 'get',
-          url: '/registration?email=' + emailKandidat,
-          headers: { Authorization: 'Basic ' + authCode },
+          url: '/registration?email=' + sessionStorage.getItem('kandidatemail'),
+          headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
           withCredentials: true,
         })
-        console.log(JSON.stringify(response.data))
         setDetailData(response.data[0])
         setLoading(false)
       } catch (error) {
@@ -52,24 +47,24 @@ const RegistrationDetail = () => {
       }
     }
     loadData()
-  }, [authCode, emailKandidat])
+  }, [])
 
   useEffect(() => {
-    // let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
-    if (!detailData.email) return
+    if (!detailData) return
     console.log('akan ambil gambar ' + detailData.email)
     const loadData = async () => {
       try {
         const response = await backendClient({
           method: 'get',
           url: '/download/file/photo?email=' + detailData.email,
-          headers: { Authorization: 'Basic ' + authCode },
+          headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
           responseType: 'blob',
         })
-        console.log(JSON.stringify(response))
-        const blob = new Blob([response.data], { type: 'image/jpeg' })
+        console.log('headers ' + JSON.stringify(response.headers['content-type']))
+        const blob = new Blob([response.data], { type: response.headers['content-type'] })
         const url = URL.createObjectURL(blob)
         setPhotoUrl(url)
+        // URL.revokeObjectURL(url)
         console.log('done download foto')
       } catch (error) {
         console.log(error.message)
@@ -80,13 +75,15 @@ const RegistrationDetail = () => {
         const response = await backendClient({
           method: 'get',
           url: '/download/file/ktp?email=' + detailData.email,
-          headers: { Authorization: 'Basic ' + authCode },
+          headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
           responseType: 'blob',
         })
-        const blob = new Blob([response.data], { type: 'image/jpeg' })
+        console.log(JSON.stringify(response))
+        const blob = new Blob([response.data], { type: response.headers['content-type'] })
         const url = URL.createObjectURL(blob)
         setKtpUrl(url)
         console.log('done download ktp')
+        // URL.revokeObjectURL(url)
       } catch (error) {
         console.log('gagal download ktp')
         console.log(error.message)
@@ -94,11 +91,10 @@ const RegistrationDetail = () => {
       }
     }
     loadData()
-  }, [detailData, authCode])
+  }, [detailData])
 
   const handleDownloadDataDetail = async () => {
     let emails = [detailData.email]
-    // let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
     console.log('downloading ' + JSON.stringify(emails))
     setLoading(true)
     const formData = emails
@@ -107,7 +103,7 @@ const RegistrationDetail = () => {
         method: 'post',
         url: '/download/registration',
         data: formData,
-        headers: { Authorization: 'Basic ' + authCode },
+        headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
         responseType: 'blob',
       })
       const blob = new Blob([response.data], { type: 'application/zip' })
@@ -152,7 +148,7 @@ const RegistrationDetail = () => {
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Jenis Kelamin:</CCol>
-                  <CCol>{detailData.jenisKelamin}</CCol>
+                  <CCol>{detailData.jeniskelamin}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Agama:</CCol>
@@ -168,57 +164,57 @@ const RegistrationDetail = () => {
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Alamat[Jalan]:</CCol>
-                  <CCol>{detailData.addrJalan}</CCol>
+                  <CCol>{detailData.jalan}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Alamat[RTRW-No]:</CCol>
                   <CCol>
-                    {detailData.addrRtrw}-{detailData.addrNo}
+                    {detailData.rtrw}-{detailData.addrNo}
                   </CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Alamat[Kelurahan]:</CCol>
-                  <CCol>{detailData.addrKelurahan}</CCol>
+                  <CCol>{detailData.kelurahan}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Alamat[Kecamatan]:</CCol>
-                  <CCol>{detailData.addrKecamatan}</CCol>
+                  <CCol>{detailData.kecamatan}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Alamat[Kabupaten]:</CCol>
-                  <CCol>{detailData.addrKabupaten}</CCol>
+                  <CCol>{detailData.kabupaten}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Alamat[Propinsi]:</CCol>
-                  <CCol>{detailData.addrPropinsi}</CCol>
+                  <CCol>{detailData.propinsi}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Alamat[KodeArea]:</CCol>
-                  <CCol>{detailData.addrKodearea}</CCol>
+                  <CCol>{detailData.kodearea}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>No HP:</CCol>
-                  <CCol>{detailData.noHp}</CCol>
+                  <CCol>{detailData.nohp}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>No KTP:</CCol>
-                  <CCol>{detailData.noKtp}</CCol>
+                  <CCol>{detailData.noktp}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>No KK:</CCol>
-                  <CCol>{detailData.noKk}</CCol>
+                  <CCol>{detailData.nokk}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>No SIM:</CCol>
-                  <CCol>{detailData.noSim}</CCol>
+                  <CCol>{detailData.nosim}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>No NPWP:</CCol>
-                  <CCol>{detailData.noNpwp}</CCol>
+                  <CCol>{detailData.nonpwp}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>No BPJS:</CCol>
-                  <CCol>{detailData.noBpjs}</CCol>
+                  <CCol>{detailData.nobpjs}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Sosial Media:</CCol>
@@ -226,39 +222,39 @@ const RegistrationDetail = () => {
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Nama Ayah:</CCol>
-                  <CCol>{detailData.namaAyah}</CCol>
+                  <CCol>{detailData.namaayah}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Nama Ibu:</CCol>
-                  <CCol>{detailData.namaIbu}</CCol>
+                  <CCol>{detailData.namaibu}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Nama Gadis Ibu:</CCol>
-                  <CCol>{detailData.namaGadisIbu}</CCol>
+                  <CCol>{detailData.namagadisibu}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Keluarga Tdk Serumah[nama]:</CCol>
-                  <CCol>{detailData.tdkSerumahNama}</CCol>
+                  <CCol>{detailData.kltdkserumahnama}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Keluarga Tdk Serumah[no-hp]:</CCol>
-                  <CCol>{detailData.tdkSerumahNohp}</CCol>
+                  <CCol>{detailData.kltdkserumahnohp}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Pengalaman Kerja[bidang]:</CCol>
-                  <CCol>{detailData.pengalamanBidang}</CCol>
+                  <CCol>{detailData.pengalamanbidang}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Pengalaman Kerja[lama]:</CCol>
-                  <CCol>{detailData.pengalamanLamakerja}</CCol>
+                  <CCol>{detailData.pengalamanlamakerja}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Pengalaman Kerja[keterangan]:</CCol>
-                  <CCol>{detailData.pengalamanKeterangan}</CCol>
+                  <CCol>{detailData.pengalamanketerangan}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Nama Agen:</CCol>
-                  <CCol>{detailData.referalAgent}</CCol>
+                  <CCol>{detailData.referalagent}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Lembaga:</CCol>
@@ -266,7 +262,7 @@ const RegistrationDetail = () => {
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Negara Tujuan:</CCol>
-                  <CCol>{detailData.negaraTujuan}</CCol>
+                  <CCol>{detailData.negaratujuan}</CCol>
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Program Kerja:</CCol>
@@ -274,7 +270,7 @@ const RegistrationDetail = () => {
                 </CRow>
                 <CRow>
                   <CCol sm={4}>Lama Program Kerja:</CCol>
-                  <CCol>{detailData.durasiProgram}</CCol>
+                  <CCol>{detailData.durasiprogram}</CCol>
                 </CRow>
               </CCol>
               <CCol sm={4}>
@@ -282,6 +278,19 @@ const RegistrationDetail = () => {
                 <CImage fluid src={ktpUrl} />
               </CCol>
             </CRow>
+            <CCard>
+              <CCardHeader>Dokumen Pendukung</CCardHeader>
+              <CCardBody>
+                {attachmentList.map((att, idx) => (
+                  <FileLinkRow
+                    key={idx}
+                    ft={att}
+                    attachments={detailData.attachments}
+                    email={detailData.email}
+                  />
+                ))}
+              </CCardBody>
+            </CCard>
           </CCardBody>
         )}
         <CCardFooter>
@@ -305,8 +314,8 @@ const RegistrationDetail = () => {
   )
 }
 
-RegistrationDetail.propTypes = {
-  data: PropTypes.string,
-}
+// RegistrationDetail.propTypes = {
+//   ft: PropTypes.object,
+// }
 
 export default RegistrationDetail
