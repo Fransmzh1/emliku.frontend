@@ -60,9 +60,9 @@ const RegistrationList = () => {
     return {
       email: h.email,
       nama: h.nama,
-      noKtp: h.noKtp,
-      registerDate: h.registerDate.substring(0, 10),
-      tujuan: h.negaraTujuan,
+      noKtp: h.noktp,
+      registerDate: h.registerdate,
+      tujuan: h.negaratujuan,
     }
   })
 
