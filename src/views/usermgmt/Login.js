@@ -15,6 +15,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CSpinner,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import PropTypes from 'prop-types'
@@ -26,6 +27,7 @@ import { toast } from 'react-toastify'
 const Login = () => {
   const [username, setUsername] = useState('')
   const [passwd, setPasswd] = useState()
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const forwardTo = location.state?.prev ? location.state.prev : '/registrationlist'
@@ -35,6 +37,7 @@ const Login = () => {
   })
 
   const handleLogin = async (e) => {
+    setLoading(true)
     e.preventDefault()
     try {
       const response = await backendClient({
@@ -45,22 +48,13 @@ const Login = () => {
         withCredentials: true,
       })
       console.log('Login sukses: ' + response.data)
-      // let expires_at = new Date().getTime() + 1800000
-      // let _loginfo = {
-      //   email: username,
-      //   name: username,
-      //   basic: response.data.accessToken,
-      //   eat: expires_at,
-      //   lembaga: response.data.lembaga,
-      //   admin: response.data.admin,
-      // }
-      // sessionStorage.setItem('loginfo', JSON.stringify(_loginfo))
       sessionStorage.setItem('userType', response.data.admin === 'true' ? 'admin' : 'operator')
       sessionStorage.setItem('authCode', response.data.accessToken)
       sessionStorage.setItem('username', username)
-
+      setLoading(false)
       navigate(forwardTo, { replace: true })
     } catch (error) {
+      setLoading(false)
       console.log(error.response)
       toast.error(error.response.data)
     }
@@ -100,10 +94,13 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4" onClick={handleLogin}>
+                        {/* <CButton color="primary" className="px-4" onClick={handleLogin}>
                           Login
-                        </CButton>
-                      </CCol>
+                        </CButton> */}
+                        <CButton disabled={loading} onClick={handleLogin}>
+                          {loading && <CSpinner component="span" size="sm" aria-hidden="true" />}
+                          Login
+                        </CButton>                      </CCol>
                     </CRow>
                   </CForm>
                 </CCardBody>
