@@ -67,7 +67,6 @@ const RegistrationList = () => {
   })
 
   useEffect(() => {
-    // let _loginfo = JSON.parse(sessionStorage.getItem('loginfo'))
     setLoading(true)
     const loadData = async () => {
       try {
@@ -94,15 +93,6 @@ const RegistrationList = () => {
   }
 
   const handleRowSelected = ({ selectedRows }) => {
-    // setSelectedRows((prevState) => {
-    //   console.log('prev ' + JSON.stringify(prevState))
-    //   if (prevState !== rows) {
-    //     return rows
-    //   }
-    //   return prevState
-    // })
-    // console.log('selected ' + selectedCount)
-    // // setDownloadEnable(true)
     checkedRows = selectedRows
     console.log('selected ' + JSON.stringify(checkedRows))
   }
@@ -120,7 +110,7 @@ const RegistrationList = () => {
     try {
       const response = await backendClient({
         method: 'post',
-        url: '/download/registration',
+        url: '/download/registration/emliku',
         data: formData,
         headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
         responseType: 'blob',

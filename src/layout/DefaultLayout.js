@@ -13,7 +13,12 @@ const DefaultLayout = () => {
         </div>
         <AppFooter />
       </div>
-      <ToastContainer position="bottom-center" />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={false}
+        hideProgressBar
+        pauseOnFocusLoss={false}
+      />
     </div>
   )
 }

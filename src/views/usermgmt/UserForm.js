@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import {
   CButton,
@@ -20,9 +20,29 @@ import { toast } from 'react-toastify'
 const UserForm = () => {
   const [newEmail, setNewEmail] = useState('')
   const [lembaga, setLembaga] = useState('')
+  const [lembagas, setLembagas] = useState([])
   const [nama, setNama] = useState('')
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await axios({
+          method: 'get',
+          url: config.BACKEND_URL + '/master/lembaga',
+          headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
+          withCredentials: true,
+        })
+        console.log('inilah: ' + JSON.stringify(response.data))
+        setLembagas(response.data)
+      } catch (error) {
+        console.log(JSON.stringify(error))
+        toast.error(error.message)
+      }
+    }
+    loadData()
+  }, [])
 
   const handleNewUser = async () => {
     let authcode = sessionStorage.getItem('authCode')
@@ -40,7 +60,7 @@ const UserForm = () => {
       toast.success('Pembuatan User Berhasil.')
       navigate('/userlist')
     } catch (error) {
-      console.log('ERror response: ' + JSON.stringify(error.response))
+      console.log('Error response: ' + JSON.stringify(error.response))
       let _response = error.response
       if (_response.status === 409) {
         toast.error('Error: Data yang sama sudah tercatat')
@@ -99,20 +119,18 @@ const UserForm = () => {
                   onChange={(e) => setLembaga(e.target.value)}
                 >
                   <option value="">Pilih Lembaga</option>
-                  <option value="EMLIKU">EMLIKU</option>
-                  <option disabled value="BINAWAN">
-                    BINAWAN
-                  </option>
-                  <option disabled value="AAI">
-                    AAI
-                  </option>
+                  {lembagas.map((l) => (
+                    <option key={l.kode} value={l.kode}>
+                      {l.nama}
+                    </option>
+                  ))}
                 </CFormSelect>
               </CCol>
             </CRow>
           </CCardBody>
           <CCardFooter>
             <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-              <CButton color="primary" className="me-md-2" onClick={() => navigate('/userlist')}>
+              <CButton color="primary" className="me-sm-2" onClick={() => navigate('/userlist')}>
                 Cancel
               </CButton>
               <CButton type="submit" color="primary">

@@ -103,6 +103,7 @@ const RegistrationEntry = () => {
         const res = await axios({
           method: 'get',
           url: config.BACKEND_URL + '/master/propinsi',
+          headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
         })
         setPropinsilist(res.data)
         setLoading(false)
@@ -172,6 +173,7 @@ const RegistrationEntry = () => {
       const res = await axios({
         method: 'get',
         url: config.BACKEND_URL + '/master/kabupaten?propinsi=' + e.target.value,
+        headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
       })
       setKabupatenlist(res.data)
       setKecamatanlist([])
@@ -190,6 +192,7 @@ const RegistrationEntry = () => {
       const res = await axios({
         method: 'get',
         url: config.BACKEND_URL + '/master/kecamatan?kabupaten=' + kabupatenId,
+        headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
       })
       setKecamatanlist(res.data)
       setLoading(false)
@@ -206,6 +209,7 @@ const RegistrationEntry = () => {
       const res = await axios({
         method: 'get',
         url: config.BACKEND_URL + '/master/kelurahan?kecamatan=' + kecamatanId,
+        headers: { Authorization: 'Basic ' + sessionStorage.getItem('authCode') },
       })
       setKelurahanlist(res.data)
       setLoading(false)

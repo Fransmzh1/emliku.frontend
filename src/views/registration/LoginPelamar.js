@@ -13,6 +13,7 @@ import {
   CCardHeader,
   CCardSubtitle,
   CCardTitle,
+  CSpinner,
 } from '@coreui/react'
 import config from 'src/config.js'
 import { Navigate } from 'react-router-dom'
@@ -55,7 +56,7 @@ const LoginPelamar = () => {
       const response = await axios({
         method: 'post',
         url: config.BACKEND_URL + '/applicant/pinlogin',
-        data: { email: email, password: pin },
+        data: { email: email, password: pin, lembaga: config.LEMBAGA },
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
@@ -136,7 +137,11 @@ const LoginPelamar = () => {
                   />
                 </CCol>
                 <CCol sm={3}>
-                  <CButton onClick={handleSubmitPin}>Submit PIN</CButton>
+                  {/* <CButton onClick={handleSubmitPin}>Submit PIN</CButton> */}
+                  <CButton disabled={loading} onClick={handleSubmitPin}>
+                    {loading && <CSpinner component="span" size="sm" aria-hidden="true" />}
+                    Submit PIN
+                  </CButton>
                 </CCol>
               </CRow>
             </CCol>
